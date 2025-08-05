@@ -11,23 +11,50 @@ class TSP:
         self.graph = [[]]
         return
 
-    def cost(self, perm):
-        """Cost
-        
-        given a permutation, uses graph to calculate total cost
+    def delta_swap_cost(self, perm, cost, i, j):
         """
-        cost = 0
-        for i in range(len(perm) - 1):
-            cost += self.graph[perm[i]][perm[i + 1]]
-        cost += self.graph[perm[-1]][perm[0]]
-        return cost
+        Calculate the new tour cost if cities at positions i and j are swapped,
+        using delta evaluation instead of recalculating the whole cost.
+
+        Args:
+            perm (list[int]): Current tour
+            cost (float): Cost of the tour
+            i (int): First swap position
+            j (int): Second swap position
+
+        Returns:
+            float: New tour cost after swapping i and j"""
+        n = len(perm)
+
+        # Wrap-around for circular tour
+        a, b = perm[(i - 1) % n], perm[i]
+        c = perm[(i + 1) % n]
+        d, e = perm[(j - 1) % n], perm[j]
+        f = perm[(j + 1) % n]
+
+        # Adjacent swap case
+        if j == i + 1 or (i == 0 and j == n - 1):
+            old_cost = self.graph[a][b] + self.graph[e][f]
+            new_cost = self.graph[a][e] + self.graph[b][f]
+        else:  # Non-adjacent case
+            old_cost = (
+                self.graph[a][b] + self.graph[b][c] +
+                self.graph[d][e] + self.graph[e][f]
+            )
+            new_cost = (
+                self.graph[a][e] + self.graph[e][c] +
+                self.graph[d][b] + self.graph[b][f]
+            )
+
+        return cost + (new_cost - old_cost)
 
     def swap(self, perm, cost):
-        """Swap
-
+        """
         Performs up to 30 iterations of the swap neighbourhood search.
         Stops early if no improvement is found in a given iteration.
-
+        Args:
+            perm (list[int]): Current tour
+            cost (float): Cost of the tour
         Returns:
             (list[int], float): The improved permutation and its cost.
         """
@@ -37,13 +64,12 @@ class TSP:
             new_found = False
             for i in range(len(sol) - 1):
                 for j in range(i + 1, len(sol)):
-                    sol[i], sol[j] = sol[j], sol[i]
-                    n_cost = self.cost(sol)
+                    n_cost = self.delta_swap_cost(sol, cost, i, j)
                     if n_cost < cost:
-                        new_found = True
+                        sol[i], sol[j] = sol[j], sol[i]
                         cost = n_cost
+                        new_found = True
                         break
-                    sol[i], sol[j] = sol[j], sol[i]
                 if new_found:
                     break
             if not new_found:
