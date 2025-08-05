@@ -13,6 +13,12 @@ class TSP:
         self.graph = [[]]
         return
 
+    def random_pairs(self, n):
+         # Generate all unique index pairs (i, j) where i < j
+        pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
+        random.shuffle(pairs)  # Randomize the order of swaps
+        return pairs
+
     def delta_swap_cost(self, perm, cost, i, j):
         """
         Calculate the new tour cost if cities at positions i and j are swapped,
@@ -65,12 +71,35 @@ class TSP:
         sol = perm.copy()
         n = len(sol)
 
-        # Generate all unique index pairs (i, j) where i < j
-        pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
-        random.shuffle(pairs)  # Randomize the order of swaps
+        pairs = self.random_pairs(n)
 
         for i, j in pairs:
             n_cost = self.delta_swap_cost(sol, cost, i, j)
             if n_cost < cost:
                 return sol, cost
         return sol, cost
+    
+    def inversion(self, perm, cost):
+        perm_ = perm.copy()
+        
+        pairs = self.random_pairs(len(perm_))
+        
+        for i, j in pairs:
+            old_cost = 0
+            for i in range(i, j - 1):
+                old_cost += self.graph[perm_[i]][perm_[i + 1]]
+            
+            # Perform inversion (inclusive of j as random pairs has j < n)
+            for k, l in zip(range(i, j), range(j, i, -1)):
+                temp = perm_[k]
+                perm_[k] = perm_[l]
+                perm_[l] = perm_[k]
+            
+            cost = 0
+            for i in range(i, j - 1):
+                cost += self.graph[perm_[i]][perm_[i + 1]]
+                
+            if cost < old_cost:
+                return perm_, cost
+        
+        return perm_, cost
