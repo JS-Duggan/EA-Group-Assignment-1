@@ -24,14 +24,15 @@ class TSP:
 
     def swap(self, perm, cost):
         """Swap
-        
-        uses class variable graph, along with an initial permutation/cost to 
-        test for a better cost using the swap neighbourhood search.
-        
-        returns first permutation that has smaller cost
+
+        Performs up to 30 iterations of the swap neighbourhood search.
+        Stops early if no improvement is found in a given iteration.
+
+        Returns:
+            (list[int], float): The improved permutation and its cost.
         """
         # create a copy of perm, not a reference
-        sol = perm[:]
+        sol = perm.copy()
         for runs in range(30):
             new_found = False
             for i in range(len(sol) - 1):
@@ -45,4 +46,6 @@ class TSP:
                     sol[i], sol[j] = sol[j], sol[i]
                 if new_found:
                     break
+            if not new_found:
+                break
         return sol, cost
