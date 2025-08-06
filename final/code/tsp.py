@@ -1,9 +1,14 @@
 import random
+import os
+import csv
+import typing
 
 class TSP:
     graph = [[]]
+    saveFile: typing.TextIO
+    csvWriter: csv.writer
 
-    def __init__(self, path):
+    def __init__(self, testPath, savePath):
         """Init class
 
         takes path to test case as input
@@ -11,6 +16,7 @@ class TSP:
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         self.graph = [[]]
+        self.loadSaveFile(savePath)
         return
 
     def random_pairs(self, n):
@@ -103,3 +109,97 @@ class TSP:
                 return perm_, cost
         
         return perm_, cost
+    
+    def localSearch(self, nIterations):
+        """
+        Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
+        Results are saved to a csv file for processing later
+
+        Args:
+            nIterations (striintng): The number of attempts the algorithm will have to produce an optimised value 
+
+        Returns:
+            """
+        
+        for i in range(nIterations):
+            basePerm = [1, 2, 3]  # ADD: Generate the permutation
+            baseCost = 10 # ADD: Calculate the overall cost
+
+            # Calculate results for the jump
+            jumpCost = baseCost
+            jumpPerm = basePerm
+            '''while True:
+                jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
+                if (tempCost < jumpCost):
+                    jumpCost = tempCost
+                else:
+                    break'''
+
+            # Calculate results for the exchange
+            exchCost = baseCost
+            exchPerm = basePerm
+            while True:
+                exchPerm, tempCost = self.exchange(exchPerm, exchCost)
+                if (tempCost < exchCost):
+                    exchCost = tempCost
+                else:
+                    break
+
+            # Calculate results for the inversion
+            invsCost = baseCost
+            invsPerm = basePerm
+            while True:
+                invsPerm, tempCost = self.inversion(invsPerm, invsCost)
+                if (tempCost < invsCost):
+                    invsCost = tempCost
+                else:
+                    break
+
+
+            self.saveData(jumpPerm, jumpCost, exchPerm, exchCost, invsPerm, invsCost)
+
+
+        
+    def loadSaveFile(self, filePath):
+        """
+        Prepares the save file for the algorithm. It creates a new file if required, and loads it into memory. 
+        If the file already exists, then a new file will be created with a slightly modified name (#)
+
+        Args:
+            filePath (string): file path to the csv file where the data will be saved. 
+
+        Returns:
+            """
+        
+        # if the file exists, give it a unique name so that it does not get overriden
+        tempFileName = filePath
+        pos = len(filePath) - 4 # ignore the .csv at the end
+        n = 1
+        while os.path.exists(tempFileName):
+            tempFileName = filePath[:pos] + '(' + n.__str__() + ')' + filePath[pos:]
+            n += 1
+        filePath = tempFileName
+
+        # Generate the file and the csv writer for use
+        self.saveFile = open(filePath, 'w', newline='')
+        self.csvWriter = csv.writer(self.saveFile)
+        self.csvWriter.writerow(['Jump - tour', 'Jump - cost', 'Exchange - tour', 'Exchange - cost', 'Inverse - tour', 'Inverse - cost'])
+        self.saveFile.flush()
+
+    def saveData(self, jumpTour, jumpCost, exchangeTour, exchangeCost, inverseTour, inverseCost):
+        """
+        Saves an entry of data into the csv file specified in the constructor. 
+        This entry has the result for the three different switching types. 
+
+        Args:
+            jumpTour (list[int]): the calculated best tour when using jump
+            jumpCost (int): the calculated cos for the tour found using jump 
+            exchangeTour (list[int]): the calculated best tour when using exchange
+            exchangeCost (int): the calculated cos for the tour found using exchange 
+            inverseTour (list[int]): the calculated best tour when using inverse
+            inverseCost (int): the calculated cos for the tour found using inverse 
+
+        Returns:
+            """
+        self.csvWriter.writerow([jumpTour, jumpCost, exchangeTour, exchangeCost, inverseTour, inverseCost])
+        self.saveFile.flush()
