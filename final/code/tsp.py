@@ -40,6 +40,10 @@ class TSP:
             float: New tour cost after swapping i and j"""
         n = len(perm)
 
+        # Helper function to get cost from 1D array
+        def dist(x, y):
+            return self.graph[x * n + y]
+
         # Wrap-around for circular tour
         a, b = perm[(i - 1) % n], perm[i]
         c = perm[(i + 1) % n]
@@ -48,17 +52,12 @@ class TSP:
 
         # Adjacent swap case
         if j == i + 1 or (i == 0 and j == n - 1):
-            old_cost = self.graph[a][b] + self.graph[e][f]
-            new_cost = self.graph[a][e] + self.graph[b][f]
-        else:  # Non-adjacent case
-            old_cost = (
-                self.graph[a][b] + self.graph[b][c] +
-                self.graph[d][e] + self.graph[e][f]
-            )
-            new_cost = (
-                self.graph[a][e] + self.graph[e][c] +
-                self.graph[d][b] + self.graph[b][f]
-            )
+            old_cost = dist(a, b) + dist(e, f)
+            new_cost = dist(a, e) + dist(b, f)
+        # Non-adjacent swap case
+        else:
+            old_cost = dist(a, b) + dist(b, c) + dist(d, e) + dist(e, f)
+            new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
 
         return cost + (new_cost - old_cost)
 
