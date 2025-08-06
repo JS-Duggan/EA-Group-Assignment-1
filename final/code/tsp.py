@@ -91,10 +91,10 @@ class TSP:
         if no better solution is found, returns input permutation and cost.
         Inversion range is random.
         Args:
-            perm (list[tuple(int row, int col)]): Current tour
+            perm (list[int]): Current tour
             cost (float): Cost of the tour
         Returns:
-            (list[tuple(int row, int col)], float): The improved permutation and its cost.
+            (list[int], float): The improved permutation and its cost.
         """
         
         new_perm = perm.copy()
@@ -106,7 +106,7 @@ class TSP:
         for i, j in pairs:
             old_cost = 0
             for i in range(i, j - 1):
-                old_cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
+                old_cost += self.graph[new_perm[i] * num_nodes + new_perm[i + 1]]
             
             # Perform inversion (inclusive of j as random pairs has j < n)
             for k, l in zip(range(i, j), range(j, i, -1)):
@@ -116,7 +116,7 @@ class TSP:
             
             cost = 0
             for i in range(i, j - 1):
-                cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
+                cost += self.graph[new_perm[i] * num_nodes + new_perm[i + 1]]
                 
             if cost < old_cost:
                 return new_perm, cost
