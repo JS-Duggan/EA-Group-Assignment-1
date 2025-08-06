@@ -86,29 +86,42 @@ class TSP:
         return sol, cost
     
     def inversion(self, perm, cost):
-        perm_ = perm.copy()
+        """
+        Perform the inversion neighbourhood search until a better solution is found
+        if no better solution is found, returns input permutation and cost.
+        Inversion range is random.
+        Args:
+            perm (list[tuple(int row, int col)]): Current tour
+            cost (float): Cost of the tour
+        Returns:
+            (list[tuple(int row, int col)], float): The improved permutation and its cost.
+        """
         
-        pairs = self.random_pairs(len(perm_))
+        new_perm = perm.copy()
+        
+        pairs = self.random_pairs(len(new_perm))
+        
+        cols = len(self.graph[0])
         
         for i, j in pairs:
             old_cost = 0
             for i in range(i, j - 1):
-                old_cost += self.graph[perm_[i]][perm_[i + 1]]
+                old_cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
             
             # Perform inversion (inclusive of j as random pairs has j < n)
             for k, l in zip(range(i, j), range(j, i, -1)):
-                temp = perm_[k]
-                perm_[k] = perm_[l]
-                perm_[l] = perm_[k]
+                temp = new_perm[k]
+                new_perm[k] = new_perm[l]
+                new_perm[l] = new_perm[k]
             
             cost = 0
             for i in range(i, j - 1):
-                cost += self.graph[perm_[i]][perm_[i + 1]]
+                cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
                 
             if cost < old_cost:
-                return perm_, cost
+                return new_perm, cost
         
-        return perm_, cost
+        return perm, cost
     
     def localSearch(self, nIterations):
         """
