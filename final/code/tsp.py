@@ -111,6 +111,16 @@ class TSP:
         return perm_, cost
     
     def localSearch(self, nIterations):
+        """
+        Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
+        Results are saved to a csv file for processing later
+
+        Args:
+            nIterations (striintng): The number of attempts the algorithm will have to produce an optimised value 
+
+        Returns:
+            """
+        
         for i in range(nIterations):
             basePerm = [1, 2, 3]  # ADD: Generate the permutation
             baseCost = 10 # ADD: Calculate the overall cost
@@ -166,7 +176,6 @@ class TSP:
         pos = len(filePath) - 4 # ignore the .csv at the end
         n = 1
         while os.path.exists(tempFileName):
-            print("hitting")
             tempFileName = filePath[:pos] + '(' + n.__str__() + ')' + filePath[pos:]
             n += 1
         filePath = tempFileName
