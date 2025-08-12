@@ -2,7 +2,9 @@ import random
 import os
 import csv
 import typing
+import time
 
+import random_path
 from load_tsp import loadTSP
 
 class TSP:
@@ -200,7 +202,7 @@ class TSP:
 
         return perm, cost
     
-    def localSearch(self, basePerm, nIterations):
+    def localSearch(self, nIterations):
         """
         Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
         Results are saved to a csv file for processing later
@@ -213,10 +215,16 @@ class TSP:
             """
         
         for i in range(nIterations):
+            # Generate random initial permutation
+            basePerm = random_path.generate_random_path(self.dimension)
+            
             # Calculate the overall cost
             baseCost = self.permutationCost(basePerm)
             
+            checkpoint = time.perf_counter()
+            
             # Calculate results for the jump
+            print("Jump: ", end="")
             jumpCost = baseCost
             jumpPerm = basePerm
             while True:
@@ -225,8 +233,14 @@ class TSP:
                     jumpCost = tempCost
                 else:
                     break
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+
+            
+            checkpoint = time.perf_counter()
+
 
             # Calculate results for the exchange
+            print("Exchange: ", end="")
             exchCost = baseCost
             exchPerm = basePerm
             while True:
@@ -235,8 +249,14 @@ class TSP:
                     exchCost = tempCost
                 else:
                     break
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+            
+
+            checkpoint = time.perf_counter()
+            
 
             # Calculate results for the inversion
+            print("Inversion: ", end="")
             invsCost = baseCost
             invsPerm = basePerm
             while True:
@@ -245,6 +265,7 @@ class TSP:
                     invsCost = tempCost
                 else:
                     break
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
 
 
             self.saveData(jumpPerm, jumpCost, exchPerm, exchCost, invsPerm, invsCost)
