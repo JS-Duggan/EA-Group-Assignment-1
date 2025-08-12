@@ -54,34 +54,35 @@ class TSP:
 
         Returns:
             float: New tour cost after swapping i and j"""
+        # Handle invalid swap cases
         n = len(perm)
 
         if i == j or n < 2:
             return cost
-
-        # normalize so i < j (makes adjacency check simpler)
+        
         if i > j:
             i, j = j, i
 
-        # Helper function to get cost from 1D array
+        # Distance lookup helper
         def dist(x, y):
             return self.graph[x * n + y]
 
-        # Wrap-around for circular tour
+        # Neighbors of i and j
         a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
         d, e, f = perm[(j - 1) % n], perm[j], perm[(j + 1) % n]
 
-        adjacent = ((j - i) == 1) or (i == 0 and j == n - 1)
-
-        # Adjacent swap case 
-        if adjacent:
+        # Handle adjacency and non-adjacency cases
+        if (j - i) == 1:
             old_cost = dist(a, b) + dist(b, e) + dist(e, f)
             new_cost = dist(a, e) + dist(e, b) + dist(b, f)
-        # Non-adjacent swap case
+        elif i == 0 and j == n - 1:
+            old_cost = dist(d, e) + dist(e, b) + dist(b, c)
+            new_cost = dist(d, b) + dist(b, e) + dist(e, c)
         else:
             old_cost = dist(a, b) + dist(b, c) + dist(d, e) + dist(e, f)
             new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
 
+        # Return updated cost
         return cost + (new_cost - old_cost)
 
     def exchange(self, perm, cost):
