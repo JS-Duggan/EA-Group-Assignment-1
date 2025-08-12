@@ -3,6 +3,8 @@ import os
 import csv
 import typing
 
+from load_tsp import loadTSP
+
 class TSP:
     graph = [[]]
     saveFile: typing.TextIO
@@ -15,7 +17,14 @@ class TSP:
         edits private variable 'graph'
         graph is 2d array, where graph[i][j] = distance between i and j
         """
-        self.graph = [[]]
+        
+        loader = loadTSP(testPath)
+        
+        self.graph = loader.get_distance_matrix()
+        
+        for i in self.graph:
+            print(i)
+        
         self.loadSaveFile(savePath)
         return
 
