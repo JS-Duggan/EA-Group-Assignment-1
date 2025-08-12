@@ -168,6 +168,38 @@ class TSP:
         # No cost improvement
         return perm, cost
     
+    def jump(self, perm, cost):
+        """
+        Perform the jump neighbourhood search using delta evaluation.
+        Moves a city from position i to j and shifts others accordingly.
+
+        Args:
+            perm (list[int]): Current tour
+            cost (float): Cost of the tour
+
+        Returns:
+            (list[int], float): The improved permutation and its cost.
+        """
+        n = len(perm)
+        indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        random.shuffle(indices)
+
+        for i, j in indices:
+            # Create new tour by moving city from i to j
+            new_perm = perm.copy()
+            city = new_perm.pop(i)
+            new_perm.insert(j, city)
+
+            # Compute cost of new tour (delta evaluation)
+            new_cost = 0
+            for k in range(n):
+                new_cost += self.graph[new_perm[k] * self.dimension + new_perm[(k + 1) % n]]
+
+            if new_cost < cost:
+                return new_perm, new_cost
+
+        return perm, cost
+    
     def localSearch(self, basePerm, nIterations):
         """
         Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
@@ -187,12 +219,12 @@ class TSP:
             # Calculate results for the jump
             jumpCost = baseCost
             jumpPerm = basePerm
-            '''while True:
+            while True:
                 jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
                 if (tempCost < jumpCost):
                     jumpCost = tempCost
                 else:
-                    break'''
+                    break
 
             # Calculate results for the exchange
             exchCost = baseCost
