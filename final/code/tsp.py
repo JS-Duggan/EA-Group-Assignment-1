@@ -31,6 +31,12 @@ class TSP:
     def getDimension(self):
         return self.dimension
     
+    def permutationCost(self, permutation):
+        cost = 0
+        for i in range(permutation - 1):
+            cost += self.graph[permutation[i] * self.dimension + permutation[i + 1]]
+        return cost
+    
     def random_pairs(self, n):
          # Generate all unique index pairs (i, j) where i < j
         pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
@@ -134,7 +140,7 @@ class TSP:
         
         return perm, cost
     
-    def localSearch(self, nIterations):
+    def localSearch(self, basePerm, nIterations):
         """
         Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
         Results are saved to a csv file for processing later
@@ -146,7 +152,7 @@ class TSP:
             """
         
         for i in range(nIterations):
-            basePerm = [1, 2, 3]  # ADD: Generate the permutation
+            # basePerm = [1, 2, 3]  # ADD: Generate the permutation
             baseCost = 10 # ADD: Calculate the overall cost
 
             # Calculate results for the jump

@@ -11,3 +11,7 @@ dimension = tsp.getDimension()
 permutation = randomPath.generate_random_path(dimension)
 
 print(permutation)
+
+nIterations = 30
+tsp.localSearch(permutation, 30)
+
