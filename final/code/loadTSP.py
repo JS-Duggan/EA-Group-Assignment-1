@@ -1,6 +1,6 @@
 import math
 
-class TSP:
+class loadTSP:
     def __init__(self, file_path):
         self.file_path = file_path
         self.dimension = None
