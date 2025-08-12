@@ -1,0 +1,3 @@
+Summarize and compare in the file results/local_search_analysis.txt the results
+using at most 150 words.
+
