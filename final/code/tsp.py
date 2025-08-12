@@ -109,28 +109,30 @@ class TSP:
                 return sol, n_cost
         return sol, cost
     
-    def inversion_cost(self, perm, i, j):
+    def delta_inversion_cost(self, perm, cost, i, j):
         """
-        Calculate the cost of the path between i-1 and j+1 of the permutation.
-        Inversion between i and j, will only change the cost between i-1 and j+1.
-        
+        Calculate the cost after inversion between i and j.
+        Only the costs entering (i - 1 to i) and exiting (j to j + 1) the inversion change
+        as the graph is undirected.
         Args:
             perm (list[int]): Current tour
+            cost (float): Cost of the tour
             i (int): Inversion start
             j (int): Inversion end
 
         Returns:
-            float: New cost between range i-1 and j+1 of permutation
+            float: New tour cost after inversion between i and j
         """
+        # Calculate changed cost entering inversion
+        if i > 0:
+            cost -= self.graph[perm[i - 1] * self.dimension + perm[i]]
+            cost += self.graph[perm[i - 1] * self.dimension + perm[j]]
         
-        cost = 0
-        for source in range(i - 1, j + 1):
-            if source < 0 or source == len(perm) - 1:
-                continue
+        # Calculate changed cost exiting inversion
+        if j < len(perm) - 1:
+            cost -= self.graph[perm[j] * self.dimension + perm[j + 1]]
+            cost += self.graph[perm[i] * self.dimension + perm[j + 1]]
             
-            dest = source + 1
-            cost += self.graph[perm[source] * self.dimension + perm[dest]]
-        
         return cost
     
     def inversion(self, perm, cost):
@@ -144,39 +146,25 @@ class TSP:
         Returns:
             (list[int], float): The improved permutation and its cost.
         """
+        pairs = self.random_pairs(self.dimension)
         
-        new_perm = perm.copy()
-        
-        pairs = self.random_pairs(len(new_perm))
-        
-        for i, j in pairs:
-            new_cost = cost
-            # Subtract old cost between i-1 and j+1 before inversion
-            new_cost -= self.inversion_cost(new_perm, i, j)
+        for i, j in pairs:         
+            new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
-            # Perform inversion (inclusive of j as random pairs has j < n)
-            start = i
-            end = j
-            while start < end:
-                new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
-                start += 1
-                end -= 1
-            
-            # Add in the replaced cost between i-1 and j+1 after inversion
-            new_cost += self.inversion_cost(new_perm, i, j)
-
             # Improved cost
             if new_cost < cost:
+                # Perform inversion (inclusive of j as random pairs has j < n)
+                new_perm = perm.copy()
+                start = i
+                end = j
+                while start < end:
+                    new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
+                    start += 1
+                    end -= 1
+                
+                # Return permutation and cost of cheaper path
                 return new_perm, new_cost
             
-            # Undo inversion
-            start = i
-            end = j
-            while start < end:
-                new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
-                start += 1
-                end -= 1
-        
         # No cost improvement
         return perm, cost
     
