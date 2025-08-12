@@ -22,12 +22,15 @@ class TSP:
         
         self.graph = loader.get_distance_matrix()
         
-        for i in self.graph:
-            print(i)
+        self.dimension = loader.get_dimension()
+        
         
         self.loadSaveFile(savePath)
         return
 
+    def getDimension(self):
+        return self.dimension
+    
     def random_pairs(self, n):
          # Generate all unique index pairs (i, j) where i < j
         pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
