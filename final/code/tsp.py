@@ -22,6 +22,8 @@ class TSP:
         
         self.graph = loader.get_distance_matrix()
         
+        # print(len(self.graph))
+        
         self.dimension = loader.get_dimension()
         
         
@@ -33,7 +35,7 @@ class TSP:
     
     def permutationCost(self, permutation):
         cost = 0
-        for i in range(permutation - 1):
+        for i in range(len(permutation) - 1):
             cost += self.graph[permutation[i] * self.dimension + permutation[i + 1]]
         return cost
     
@@ -118,12 +120,10 @@ class TSP:
         
         pairs = self.random_pairs(len(new_perm))
         
-        cols = len(self.graph[0])
-        
         for i, j in pairs:
             old_cost = 0
             for i in range(i, j - 1):
-                old_cost += self.graph[new_perm[i] * num_nodes + new_perm[i + 1]]
+                old_cost += self.graph[new_perm[i] * self.dimension + new_perm[i + 1]]
             
             # Perform inversion (inclusive of j as random pairs has j < n)
             for k, l in zip(range(i, j), range(j, i, -1)):
@@ -133,7 +133,7 @@ class TSP:
             
             cost = 0
             for i in range(i, j - 1):
-                cost += self.graph[new_perm[i] * num_nodes + new_perm[i + 1]]
+                cost += self.graph[new_perm[i] * self.dimension + new_perm[i + 1]]
                 
             if cost < old_cost:
                 return new_perm, cost
@@ -153,8 +153,10 @@ class TSP:
         
         for i in range(nIterations):
             # basePerm = [1, 2, 3]  # ADD: Generate the permutation
-            baseCost = 10 # ADD: Calculate the overall cost
-
+            # baseCost = 10 # ADD: Calculate the overall cost
+            
+            baseCost = self.permutationCost(basePerm)
+            
             # Calculate results for the jump
             jumpCost = baseCost
             jumpPerm = basePerm
