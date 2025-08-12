@@ -20,12 +20,8 @@ class TSP:
         
         loader = loadTSP(testPath)
         
-        self.graph = loader.get_distance_matrix()
-        
-        # print(len(self.graph))
-        
+        self.graph = loader.get_distance_matrix()    
         self.dimension = loader.get_dimension()
-        
         
         self.loadSaveFile(savePath)
         return
