@@ -148,7 +148,7 @@ class TSP:
         
         pairs = self.random_pairs(len(new_perm))
         
-        for i, j in pairs:          
+        for i, j in pairs:
             new_cost = cost
             # Subtract old cost between i-1 and j+1 before inversion
             new_cost -= self.inversion_cost(new_perm, i, j)
@@ -168,7 +168,13 @@ class TSP:
             if new_cost < cost:
                 return new_perm, new_cost
             
-            cost = new_cost
+            # Undo inversion
+            start = i
+            end = j
+            while start < end:
+                new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
+                start += 1
+                end -= 1
         
         # No cost improvement
         return perm, cost
