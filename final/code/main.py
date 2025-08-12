@@ -1,7 +1,6 @@
 import argparse
 
 import runDataSummary
-import random_path
 from tsp import TSP
 
 """
@@ -24,12 +23,8 @@ savePath = f'final/code/saves/{tsp_instance}.csv'
 
 tsp = TSP(testPath, savePath)
 
-# Generate random path
-dimension = tsp.getDimension()
-permutation = random_path.generate_random_path(dimension)
-
 # Run local search
-tsp.localSearch(permutation, iterations)
+tsp.localSearch(iterations)
 
 # Output data summary
 runDataSummary.processData(tsp.getSavePath())
