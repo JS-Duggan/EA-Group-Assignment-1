@@ -106,6 +106,7 @@ class TSP:
             if n_cost < cost:
                 sol[i], sol[j] = sol[j], sol[i]
                 return sol, n_cost
+            cost = n_cost
         return sol, cost
     
     def inversion_cost(self, perm, i, j):
