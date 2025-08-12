@@ -104,6 +104,30 @@ class TSP:
                 return sol, cost
         return sol, cost
     
+    def inversion_cost(self, perm, i, j):
+        """
+        Calculate the cost of the path between i-1 and j+1 of the permutation.
+        Inversion between i and j, will only change the cost between i-1 and j+1.
+        
+        Args:
+            perm (list[int]): Current tour
+            i (int): Inversion start
+            j (int): Inversion end
+
+        Returns:
+            float: New cost between range i-1 and j+1 of permutation
+        """
+        
+        cost = 0
+        for source in range(i - 1, j + 1):
+            if source < 0 or source == len(perm) - 1:
+                continue
+            
+            dest = source + 1
+            cost += self.graph[perm[source] * self.dimension + perm[dest]]
+        
+        return cost
+    
     def inversion(self, perm, cost):
         """
         Perform the inversion neighbourhood search until a better solution is found
@@ -120,24 +144,29 @@ class TSP:
         
         pairs = self.random_pairs(len(new_perm))
         
-        for i, j in pairs:
-            old_cost = 0
-            for i in range(i, j - 1):
-                old_cost += self.graph[new_perm[i] * self.dimension + new_perm[i + 1]]
+        for i, j in pairs:          
+            new_cost = cost
+            # Subtract old cost between i-1 and j+1 before inversion
+            new_cost -= self.inversion_cost(new_perm, i, j)
             
             # Perform inversion (inclusive of j as random pairs has j < n)
-            for k, l in zip(range(i, j), range(j, i, -1)):
-                temp = new_perm[k]
-                new_perm[k] = new_perm[l]
-                new_perm[l] = new_perm[k]
+            start = i
+            end = j
+            while start < end:
+                new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
+                start += 1
+                end -= 1
             
-            cost = 0
-            for i in range(i, j - 1):
-                cost += self.graph[new_perm[i] * self.dimension + new_perm[i + 1]]
-                
-            if cost < old_cost:
-                return new_perm, cost
+            # Add in the replaced cost between i-1 and j+1 after inversion
+            new_cost += self.inversion_cost(new_perm, i, j)
+
+            # Improved cost
+            if new_cost < cost:
+                return new_perm, new_cost
+            
+            cost = new_cost
         
+        # No cost improvement
         return perm, cost
     
     def localSearch(self, basePerm, nIterations):
@@ -146,15 +175,14 @@ class TSP:
         Results are saved to a csv file for processing later
 
         Args:
+            basePerm (list[int]): Initial tour
             nIterations (striintng): The number of attempts the algorithm will have to produce an optimised value 
 
         Returns:
             """
         
         for i in range(nIterations):
-            # basePerm = [1, 2, 3]  # ADD: Generate the permutation
-            # baseCost = 10 # ADD: Calculate the overall cost
-            
+            # Calculate the overall cost
             baseCost = self.permutationCost(basePerm)
             
             # Calculate results for the jump
