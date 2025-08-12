@@ -294,3 +294,6 @@ class TSP:
             """
         self.csvWriter.writerow([jumpTour, jumpCost, exchangeTour, exchangeCost, inverseTour, inverseCost])
         self.saveFile.flush()
+        
+    def getSavePath(self):
+        return self.saveFile.name
