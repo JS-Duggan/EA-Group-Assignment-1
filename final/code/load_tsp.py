@@ -72,6 +72,9 @@ class loadTSP:
 
     def get_distance_matrix(self):
         return self.distance_matrix
+    
+    def get_dimension(self):
+        return self.dimension
 
 
 # Example usage
