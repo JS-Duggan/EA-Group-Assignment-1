@@ -33,7 +33,7 @@ class TSP:
         cost = 0
         for i in range(n):
             cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
-        return cost
+        return round(cost, 6)
     
     def random_pairs(self, n):
         # Generate all unique index pairs (i, j) where i < j
@@ -83,7 +83,7 @@ class TSP:
             new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
 
         # Return updated cost
-        return cost + (new_cost - old_cost)
+        return round(cost + (new_cost - old_cost), 6)
 
     def exchange(self, perm, cost):
         """
@@ -136,7 +136,7 @@ class TSP:
         cost += self.graph[perm[(i - 1) % n] * n + perm[j]]
         cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
             
-        return cost
+        return round(cost, 6)
     
     def inversion(self, perm, cost):
         """
@@ -212,7 +212,7 @@ class TSP:
             cost += self.graph[perm[(j - 1) % n] * n + perm[i]]
             cost += self.graph[perm[i] * n + perm[j]]
         
-        return cost
+        return round(cost, 6)
     
     def jump(self, perm, cost):
         """
@@ -304,10 +304,11 @@ class TSP:
             while True:
                 invsPerm, tempCost = self.inversion(invsPerm, invsCost)
                 if (tempCost < invsCost):
-                    invsCost = tempCost
+                    invsCost = tempCost                    
                 else:
                     break
             print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+            print()
 
 
             self.saveData(jumpPerm, jumpCost, exchPerm, exchCost, invsPerm, invsCost)
