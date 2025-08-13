@@ -7,23 +7,23 @@ obtained.
 
 EIL51:
     Jump: 
-        - mean = 477.3
-        - median = 473.5
-        - mode = 514
-        - max = 523
-        - min = 443
+        - mean = 475.06666666666666
+        - median = 472.5
+        - mode = 465
+        - max = 532
+        - min = 445
     Exchange: 
-        - mean = 545.2333333333333
-        - median = 546.5
-        - mode = 584
-        - max = 654
-        - min = 471
+        - mean = 571.6666666666666
+        - median = 562.0
+        - mode = 561
+        - max = 635
+        - min = 531
     Inverse: 
-        - mean = 433.93333333333334
-        - median = 432.5
-        - mode = 429
-        - max = 456
-        - min = 419
+        - mean = 460
+        - median = 456.5
+        - mode = 454
+        - max = 493
+        - min = 439
 
 EIL76:
     Jump: 
