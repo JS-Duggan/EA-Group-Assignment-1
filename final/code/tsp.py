@@ -22,23 +22,21 @@ class TSP:
         
         loader = loadTSP(testPath)
         
-        self.graph = loader.get_distance_matrix()    
+        self.graph = loader.get_distance_matrix()
         self.dimension = loader.get_dimension()
         
         self.loadSaveFile(savePath)
         return
-
-    def getDimension(self):
-        return self.dimension
     
-    def permutationCost(self, permutation):
+    def permutationCost(self, perm):
+        n = len(perm)
         cost = 0
-        for i in range(len(permutation) - 1):
-            cost += self.graph[permutation[i] * self.dimension + permutation[i + 1]]
+        for i in range(n):
+            cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
         return cost
     
     def random_pairs(self, n):
-         # Generate all unique index pairs (i, j) where i < j
+        # Generate all unique index pairs (i, j) where i < j
         pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
         random.shuffle(pairs)  # Randomize the order of swaps
         return pairs
@@ -125,15 +123,16 @@ class TSP:
         Returns:
             float: New tour cost after inversion between i and j
         """
+        n = len(perm)
         # Calculate changed cost entering inversion
         if i > 0:
-            cost -= self.graph[perm[i - 1] * self.dimension + perm[i]]
-            cost += self.graph[perm[i - 1] * self.dimension + perm[j]]
+            cost -= self.graph[perm[i - 1] * n + perm[i]]
+            cost += self.graph[perm[i - 1] * n + perm[j]]
         
         # Calculate changed cost exiting inversion
         if j < len(perm) - 1:
-            cost -= self.graph[perm[j] * self.dimension + perm[j + 1]]
-            cost += self.graph[perm[i] * self.dimension + perm[j + 1]]
+            cost -= self.graph[perm[j] * n + perm[j + 1]]
+            cost += self.graph[perm[i] * n + perm[j + 1]]
             
         return cost
     
@@ -148,7 +147,8 @@ class TSP:
         Returns:
             (list[int], float): The improved permutation and its cost.
         """
-        pairs = self.random_pairs(self.dimension)
+        n = len(perm)
+        pairs = self.random_pairs(n)
         
         for i, j in pairs:         
             new_cost = self.delta_inversion_cost(perm, cost, i, j)
@@ -170,6 +170,48 @@ class TSP:
         # No cost improvement
         return perm, cost
     
+    def delta_jump_cost(self, perm, cost, i, j):
+        """
+        Calculate the cost after jump i to j, using delta evaluation instead of
+        recalculating the whole cost.
+
+        Args:
+            perm (list[int]): Current tour
+            cost (float): Cost of the tour
+            i (int): Jump from
+            j (int): Jump to
+
+        Returns:
+            float: New tour cost after jump
+        """
+        n = len(perm)
+        
+        if (i == 0 and j == n-1) or (i == n-1 and j == 0): 
+            return cost
+        
+        if i < j:
+            # Remove edges
+            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
+            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
+            cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+            
+            # Add edges
+            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
+            cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
+            cost += self.graph[perm[j] * n + perm[i]]
+        else:
+            # Remove edges
+            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
+            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
+            cost -= self.graph[perm[(j - 1) % n] * n + perm[j]]
+            
+            # Add edges
+            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
+            cost += self.graph[perm[(j - 1) % n] * n + perm[i]]
+            cost += self.graph[perm[i] * n + perm[j]]
+        
+        return cost
+    
     def jump(self, perm, cost):
         """
         Perform the jump neighbourhood search using delta evaluation.
@@ -187,17 +229,15 @@ class TSP:
         random.shuffle(indices)
 
         for i, j in indices:
-            # Create new tour by moving city from i to j
-            new_perm = perm.copy()
-            city = new_perm.pop(i)
-            new_perm.insert(j, city)
-
             # Compute cost of new tour (delta evaluation)
-            new_cost = 0
-            for k in range(n):
-                new_cost += self.graph[new_perm[k] * self.dimension + new_perm[(k + 1) % n]]
-
+            new_cost = self.delta_jump_cost(perm, cost, i, j)
+                
             if new_cost < cost:
+                # Create new tour by moving city from i to j
+                new_perm = perm.copy()
+                city = new_perm.pop(i)
+                new_perm.insert(j, city)
+                
                 return new_perm, new_cost
 
         return perm, cost
