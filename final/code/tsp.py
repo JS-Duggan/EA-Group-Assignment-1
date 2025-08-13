@@ -124,15 +124,17 @@ class TSP:
             float: New tour cost after inversion between i and j
         """
         n = len(perm)
-        # Calculate changed cost entering inversion
-        if i > 0:
-            cost -= self.graph[perm[i - 1] * n + perm[i]]
-            cost += self.graph[perm[i - 1] * n + perm[j]]
         
-        # Calculate changed cost exiting inversion
-        if j < len(perm) - 1:
-            cost -= self.graph[perm[j] * n + perm[j + 1]]
-            cost += self.graph[perm[i] * n + perm[j + 1]]
+        if i == 0 and j == n-1:
+            return cost
+        
+        # Remove edges
+        cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
+        cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+        
+        # Add edges
+        cost += self.graph[perm[(i - 1) % n] * n + perm[j]]
+        cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
             
         return cost
     
