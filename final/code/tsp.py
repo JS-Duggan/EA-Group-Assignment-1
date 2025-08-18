@@ -20,10 +20,10 @@ class TSP:
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        loader = loadTSP(testPath)
+        tsp = loadTSP(testPath)
         
-        self.graph = loader.get_distance_matrix()
-        self.dimension = loader.get_dimension()
+        self.graph = tsp.get_distance_matrix()
+        self.dimension = tsp.get_dimension()
         
         self.loadSaveFile(savePath)
         return
@@ -35,12 +35,26 @@ class TSP:
             cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
         return cost
     
-    def random_pairs(self, n):
-        # Generate all unique index pairs (i, j) where i < j
-        pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
-        random.shuffle(pairs)  # Randomize the order of swaps
-        return pairs
-
+    # def random_pairs(self, n):
+    #     # Generate all unique index pairs (i, j) where i < j
+    #     pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
+    #     random.shuffle(pairs)  # Randomize the order of swaps
+    #     return pairs
+    
+    def random_pair(self, n):
+        """
+        Generate a single random pair i, j where i < j < n
+        
+        Args:
+            n (int): Number of cities
+        
+        Returns:
+            (int, int): Random pair (i, j)
+        """
+        i = random.randint(0, n - 2)
+        j = random.randint(i + 1, n - 1)
+        return i, j
+        
     def delta_swap_cost(self, perm, cost, i, j):
         """
         Calculate the new tour cost if cities at positions i and j are swapped,
@@ -100,9 +114,11 @@ class TSP:
         sol = perm.copy()
         n = len(sol)
 
-        pairs = self.random_pairs(n)
-
-        for i, j in pairs:
+        # pairs = self.random_pairs(n)
+        
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
             n_cost = self.delta_swap_cost(sol, cost, i, j)
             if n_cost < cost - 1e-9:
                 sol[i], sol[j] = sol[j], sol[i]
@@ -150,9 +166,13 @@ class TSP:
             (list[int], float): The improved permutation and its cost.
         """
         n = len(perm)
-        pairs = self.random_pairs(n)
+        # pairs = self.random_pairs(n)
         
-        for i, j in pairs:         
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
+        
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
+            
             new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
             # Improved cost
@@ -227,10 +247,16 @@ class TSP:
             (list[int], float): The improved permutation and its cost.
         """
         n = len(perm)
-        indices = [(i, j) for i in range(n) for j in range(n) if i != j]
-        random.shuffle(indices)
+        # indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        
+        # indices = [(i, j) for i in range(n) for j in range(n) if i < j]
+        # random.shuffle(indices)
 
-        for i, j in indices:
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
+            
+            # Jump(i, j)
             # Compute cost of new tour (delta evaluation)
             new_cost = self.delta_jump_cost(perm, cost, i, j)
                 
@@ -239,6 +265,18 @@ class TSP:
                 new_perm = perm.copy()
                 city = new_perm.pop(i)
                 new_perm.insert(j, city)
+                
+                return new_perm, new_cost
+            
+            # Reversed: Jump(j, i)
+            # Compute cost of new tour (delta evaluation)
+            new_cost = self.delta_jump_cost(perm, cost, j, i)
+                
+            if new_cost < cost - 1e-9:
+                # Create new tour by moving city from i to j
+                new_perm = perm.copy()
+                city = new_perm.pop(j)
+                new_perm.insert(i, city)
                 
                 return new_perm, new_cost
 
