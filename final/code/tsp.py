@@ -227,10 +227,12 @@ class TSP:
             (list[int], float): The improved permutation and its cost.
         """
         n = len(perm)
-        indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        # indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        indices = [(i, j) for i in range(n) for j in range(n) if i < j]
         random.shuffle(indices)
 
         for i, j in indices:
+            # Jump(i, j)
             # Compute cost of new tour (delta evaluation)
             new_cost = self.delta_jump_cost(perm, cost, i, j)
                 
@@ -239,6 +241,18 @@ class TSP:
                 new_perm = perm.copy()
                 city = new_perm.pop(i)
                 new_perm.insert(j, city)
+                
+                return new_perm, new_cost
+            
+            # Reversed: Jump(j, i)
+            # Compute cost of new tour (delta evaluation)
+            new_cost = self.delta_jump_cost(perm, cost, j, i)
+                
+            if new_cost < cost - 1e-9:
+                # Create new tour by moving city from i to j
+                new_perm = perm.copy()
+                city = new_perm.pop(j)
+                new_perm.insert(i, city)
                 
                 return new_perm, new_cost
 
