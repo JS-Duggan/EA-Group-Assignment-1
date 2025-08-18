@@ -33,7 +33,7 @@ class TSP:
         cost = 0
         for i in range(n):
             cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
-        return round(cost, 6)
+        return cost
     
     def random_pairs(self, n):
         # Generate all unique index pairs (i, j) where i < j
@@ -83,7 +83,7 @@ class TSP:
             new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
 
         # Return updated cost
-        return round(cost + (new_cost - old_cost), 6)
+        return cost + (new_cost - old_cost)
 
     def exchange(self, perm, cost):
         """
@@ -104,7 +104,7 @@ class TSP:
 
         for i, j in pairs:
             n_cost = self.delta_swap_cost(sol, cost, i, j)
-            if n_cost < cost:
+            if n_cost < cost - 1e-9:
                 sol[i], sol[j] = sol[j], sol[i]
                 return sol, n_cost
         return sol, cost
@@ -136,7 +136,7 @@ class TSP:
         cost += self.graph[perm[(i - 1) % n] * n + perm[j]]
         cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
             
-        return round(cost, 6)
+        return cost
     
     def inversion(self, perm, cost):
         """
@@ -156,7 +156,7 @@ class TSP:
             new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
             # Improved cost
-            if new_cost < cost:
+            if new_cost < cost - 1e-9:
                 # Perform inversion (inclusive of j as random pairs has j < n)
                 new_perm = perm.copy()
                 start = i
@@ -212,7 +212,7 @@ class TSP:
             cost += self.graph[perm[(j - 1) % n] * n + perm[i]]
             cost += self.graph[perm[i] * n + perm[j]]
         
-        return round(cost, 6)
+        return cost
     
     def jump(self, perm, cost):
         """
@@ -234,7 +234,7 @@ class TSP:
             # Compute cost of new tour (delta evaluation)
             new_cost = self.delta_jump_cost(perm, cost, i, j)
                 
-            if new_cost < cost:
+            if new_cost < cost - 1e-9:
                 # Create new tour by moving city from i to j
                 new_perm = perm.copy()
                 city = new_perm.pop(i)
@@ -257,6 +257,8 @@ class TSP:
             """
         
         for i in range(nIterations):
+            print(f"{i}:")
+            
             # Generate random initial permutation
             basePerm = random_path.generate_random_path(self.dimension)
             
