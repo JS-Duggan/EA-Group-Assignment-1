@@ -50,4 +50,4 @@ def processData(path):
     calculateStatistics(InverseCosts)
 
 
-processData('final/code/temp_results/eil51.csv')
+# processData('final/code/temp_results/eil51.csv')

@@ -1,6 +1,6 @@
 import math
 
-class TSP:
+class loadTSP:
     def __init__(self, file_path):
         self.file_path = file_path
         self.dimension = None
@@ -72,6 +72,9 @@ class TSP:
 
     def get_distance_matrix(self):
         return self.distance_matrix
+    
+    def get_dimension(self):
+        return self.dimension
 
 
 # Example usage
@@ -84,8 +87,8 @@ class TSP:
 #     print("First 5 coordinates:", coords[:5])
 #     print("Distance between city 0 and 1:", dist_matrix[0][1])
 
-if __name__ == "__main__":
-    tsp = TSP("usa13509.tsp")
-    print(f"Loaded {len(tsp.coordinates)} cities.")
-    print("First 5 coordinates:", tsp.coordinates[:5])
-    print("Distance between city 0 and 1:", tsp.get_distance(0, 1))
+# if __name__ == "__main__":
+#     tsp = TSP("usa13509.tsp")
+#     print(f"Loaded {len(tsp.coordinates)} cities.")
+#     print("First 5 coordinates:", tsp.coordinates[:5])
+#     print("Distance between city 0 and 1:", tsp.get_distance(0, 1))
