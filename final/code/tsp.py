@@ -38,19 +38,17 @@ class TSP(Permutation):
             (list[int], float): The improved permutation and its cost.
         """
         # create a copy of perm, not a reference
-        sol = perm.copy()
-        n = len(sol)
+        n = len(perm)
 
         # pairs = self.random_pairs(n)
         
         max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
-            n_cost = self.delta_swap_cost(sol, cost, i, j)
+            n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
-                sol = self.swap_pair(sol, i, j)
-                return sol, n_cost
-        return sol, cost
+                return self.swap_pair(perm.copy(), i, j), n_cost
+        return perm, cost
     
     def inversion(self, perm, cost):
         """
@@ -70,15 +68,12 @@ class TSP(Permutation):
         
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
-            
             new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
             # Improved cost
             if new_cost < cost - 1e-9:
-                new_perm = self.inversion_pair(perm, i, j)
-                
                 # Return permutation and cost of cheaper path
-                return new_perm, new_cost
+                return self.inversion_pair(perm, i, j), new_cost
             
         # No cost improvement
         return perm, cost
@@ -111,9 +106,7 @@ class TSP(Permutation):
                 
             if new_cost < cost - 1e-9:
                 # Create new tour by moving city from i to j
-                new_perm = self.jump_pair(perm.copy(), i, j)
-                
-                return new_perm, new_cost
+                return self.jump_pair(perm.copy(), i, j), new_cost
             
             # Reversed: Jump(j, i)
             # Compute cost of new tour (delta evaluation)
@@ -121,9 +114,7 @@ class TSP(Permutation):
                 
             if new_cost < cost - 1e-9:
                 # Create new tour by moving city from i to j
-                new_perm = self.jump_pair(perm.copy(), j, i)
-                
-                return new_perm, new_cost
+                return self.jump_pair(perm.copy(), j, i), new_cost
 
         return perm, cost
     
