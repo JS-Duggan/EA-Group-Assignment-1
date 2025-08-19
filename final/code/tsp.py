@@ -4,7 +4,6 @@ import csv
 import typing
 import time
 
-import random_path
 from load_tsp import loadTSP
 from permutation import Permutation
 
@@ -12,6 +11,11 @@ class TSP(Permutation):
     graph = [[]]
     saveFile: typing.TextIO
     csvWriter: csv.writer
+
+    def generate_random_path(self, num_nodes):
+        path = list(range(0, num_nodes))
+        random.shuffle(path)
+        return path
 
     def __init__(self, testPath, savePath):
         """Init class
@@ -134,7 +138,7 @@ class TSP(Permutation):
             print(f"{i}:")
             
             # Generate random initial permutation
-            basePerm = random_path.generate_random_path(self.dimension)
+            basePerm = self.generate_random_path(self.dimension)
             
             # Calculate the overall cost
             baseCost = self.permutationCost(basePerm)
