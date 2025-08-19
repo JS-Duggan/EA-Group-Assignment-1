@@ -6,13 +6,18 @@ import time
 import sys
 import numpy as np
 
-import random_path
 from load_tsp import loadTSP
+from permutation import Permutation
 
-class TSP:
+class TSP(Permutation):
     graph = [[]]
     saveFile: typing.TextIO
     csvWriter: csv.writer
+
+    def generate_random_path(self, num_nodes):
+        path = list(range(0, num_nodes))
+        random.shuffle(path)
+        return path
 
     def __init__(self, testPath, savePath):
         """Init class
@@ -22,22 +27,20 @@ class TSP:
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        tsp = loadTSP(testPath)
+
         
-        self.graph = tsp.get_distance_matrix()
-        
-        self.dimension = tsp.get_dimension()
-    
+        super().__init__(testPath)
         
         self.loadSaveFile(savePath)
         return
     
-    def permutationCost(self, perm):
-        n = len(perm)
-        cost = 0
-        for i in range(n):
-            cost += self.graph[perm[i], perm[(i + 1) % n]]
-        return cost
+    
+#     def permutationCost(self, perm):
+#         n = len(perm)
+#         cost = 0
+#         for i in range(n):
+#             cost += self.graph[perm[i], perm[(i + 1) % n]]
+#         return cost
     
     # def random_pairs(self, n):
     #     # Generate all unique index pairs (i, j) where i < j
@@ -45,63 +48,64 @@ class TSP:
     #     random.shuffle(pairs)  # Randomize the order of swaps
     #     return pairs
     
-    def random_pair(self, n):
-        """
-        Generate a single random pair i, j where i < j < n
+#     def random_pair(self, n):
+#         """
+#         Generate a single random pair i, j where i < j < n
         
-        Args:
-            n (int): Number of cities
+#         Args:
+#             n (int): Number of cities
         
-        Returns:
-            (int, int): Random pair (i, j)
-        """
-        i = random.randint(0, n - 2)
-        j = random.randint(i + 1, n - 1)
-        return i, j
+#         Returns:
+#             (int, int): Random pair (i, j)
+#         """
+#         i = random.randint(0, n - 2)
+#         j = random.randint(i + 1, n - 1)
+#         return i, j
         
-    def delta_swap_cost(self, perm, cost, i, j):
-        """
-        Calculate the new tour cost if cities at positions i and j are swapped,
-        using delta evaluation instead of recalculating the whole cost.
+#     def delta_swap_cost(self, perm, cost, i, j):
+#         """
+#         Calculate the new tour cost if cities at positions i and j are swapped,
+#         using delta evaluation instead of recalculating the whole cost.
 
-        Args:
-            perm (list[int]): Current tour
-            cost (float): Cost of the tour
-            i (int): First swap position
-            j (int): Second swap position
+#         Args:
+#             perm (list[int]): Current tour
+#             cost (float): Cost of the tour
+#             i (int): First swap position
+#             j (int): Second swap position
 
-        Returns:
-            float: New tour cost after swapping i and j"""
-        # Handle invalid swap cases
-        n = len(perm)
+#         Returns:
+#             float: New tour cost after swapping i and j"""
+#         # Handle invalid swap cases
+#         n = len(perm)
 
-        if i == j or n < 2:
-            return cost
+#         if i == j or n < 2:
+#             return cost
         
-        if i > j:
-            i, j = j, i
+#         if i > j:
+#             i, j = j, i
 
-        # Distance lookup helper
-        def dist(x, y):
-            return self.graph[x, y]
+#         # Distance lookup helper
+#         def dist(x, y):
+#             return self.graph[x, y]
 
-        # Neighbors of i and j
-        a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
-        d, e, f = perm[(j - 1) % n], perm[j], perm[(j + 1) % n]
+#         # Neighbors of i and j
+#         a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
+#         d, e, f = perm[(j - 1) % n], perm[j], perm[(j + 1) % n]
 
-        # Handle adjacency and non-adjacency cases
-        if (j - i) == 1:
-            old_cost = dist(a, b) + dist(b, e) + dist(e, f)
-            new_cost = dist(a, e) + dist(e, b) + dist(b, f)
-        elif i == 0 and j == n - 1:
-            old_cost = dist(d, e) + dist(e, b) + dist(b, c)
-            new_cost = dist(d, b) + dist(b, e) + dist(e, c)
-        else:
-            old_cost = dist(a, b) + dist(b, c) + dist(d, e) + dist(e, f)
-            new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
+#         # Handle adjacency and non-adjacency cases
+#         if (j - i) == 1:
+#             old_cost = dist(a, b) + dist(b, e) + dist(e, f)
+#             new_cost = dist(a, e) + dist(e, b) + dist(b, f)
+#         elif i == 0 and j == n - 1:
+#             old_cost = dist(d, e) + dist(e, b) + dist(b, c)
+#             new_cost = dist(d, b) + dist(b, e) + dist(e, c)
+#         else:
+#             old_cost = dist(a, b) + dist(b, c) + dist(d, e) + dist(e, f)
+#             new_cost = dist(a, e) + dist(e, c) + dist(d, b) + dist(b, f)
 
-        # Return updated cost
-        return cost + (new_cost - old_cost)
+#         # Return updated cost
+#         return cost + (new_cost - old_cost)
+
 
     def exchange(self, perm, cost):
         """
@@ -115,49 +119,53 @@ class TSP:
             (list[int], float): The improved permutation and its cost.
         """
         # create a copy of perm, not a reference
-        sol = perm.copy()
-        n = len(sol)
+        n = len(perm)
 
         # pairs = self.random_pairs(n)
         
         max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
-            n_cost = self.delta_swap_cost(sol, cost, i, j)
+            n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
-                sol[i], sol[j] = sol[j], sol[i]    
-                
-                return sol, n_cost
-        return sol, cost
-    
-    def delta_inversion_cost(self, perm, cost, i, j):
-        """
-        Calculate the cost after inversion between i and j.
-        Only the costs entering (i - 1 to i) and exiting (j to j + 1) the inversion change
-        as the graph is undirected.
-        Args:
-            perm (list[int]): Current tour
-            cost (float): Cost of the tour
-            i (int): Inversion start
-            j (int): Inversion end
 
-        Returns:
-            float: New tour cost after inversion between i and j
-        """
-        n = len(perm)
+#                 sol[i], sol[j] = sol[j], sol[i]    
+                
+#                 return sol, n_cost
+#         return sol, cost
+    
+#     def delta_inversion_cost(self, perm, cost, i, j):
+#         """
+#         Calculate the cost after inversion between i and j.
+#         Only the costs entering (i - 1 to i) and exiting (j to j + 1) the inversion change
+#         as the graph is undirected.
+#         Args:
+#             perm (list[int]): Current tour
+#             cost (float): Cost of the tour
+#             i (int): Inversion start
+#             j (int): Inversion end
+
+#         Returns:
+#             float: New tour cost after inversion between i and j
+#         """
+#         n = len(perm)
         
-        if i == 0 and j == n-1:
-            return cost
+#         if i == 0 and j == n-1:
+#             return cost
         
-        # Remove edges
-        cost -= self.graph[perm[(i - 1) % n], perm[i]]
-        cost -= self.graph[perm[j], perm[(j + 1) % n]]
+#         # Remove edges
+#         cost -= self.graph[perm[(i - 1) % n], perm[i]]
+#         cost -= self.graph[perm[j], perm[(j + 1) % n]]
         
-        # Add edges
-        cost += self.graph[perm[(i - 1) % n], perm[j]]
-        cost += self.graph[perm[i], perm[(j + 1) % n]]
+#         # Add edges
+#         cost += self.graph[perm[(i - 1) % n], perm[j]]
+#         cost += self.graph[perm[i], perm[(j + 1) % n]]
             
-        return cost
+#         return cost
+
+                return self.swap_pair(perm.copy(), i, j), n_cost
+        return perm, cost
+
     
     def inversion(self, perm, cost):
         """
@@ -177,68 +185,71 @@ class TSP:
         
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
-            
             new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
             # Improved cost
             if new_cost < cost - 1e-9:
+
                 # Perform inversion (inclusive of j as random pairs has j < n)
-                new_perm = perm.copy()
-                start = i
-                end = j
-                while start < end:
-                    new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
-                    start += 1
-                    end -= 1
+#                 new_perm = perm.copy()
+#                 start = i
+#                 end = j
+#                 while start < end:
+#                     new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
+#                     start += 1
+#                     end -= 1
                             
+
                 # Return permutation and cost of cheaper path
-                return new_perm, new_cost
+                return self.inversion_pair(perm, i, j), new_cost
             
         # No cost improvement
         return perm, cost
     
-    def delta_jump_cost(self, perm, cost, i, j):
-        """
-        Calculate the cost after jump i to j, using delta evaluation instead of
-        recalculating the whole cost.
 
-        Args:
-            perm (list[int]): Current tour
-            cost (float): Cost of the tour
-            i (int): Jump from
-            j (int): Jump to
+#     def delta_jump_cost(self, perm, cost, i, j):
+#         """
+#         Calculate the cost after jump i to j, using delta evaluation instead of
+#         recalculating the whole cost.
 
-        Returns:
-            float: New tour cost after jump
-        """
-        n = len(perm)
+#         Args:
+#             perm (list[int]): Current tour
+#             cost (float): Cost of the tour
+#             i (int): Jump from
+#             j (int): Jump to
+
+#         Returns:
+#             float: New tour cost after jump
+#         """
+#         n = len(perm)
         
-        if (i == 0 and j == n-1) or (i == n-1 and j == 0): 
-            return cost
+#         if (i == 0 and j == n-1) or (i == n-1 and j == 0): 
+#             return cost
         
-        if i < j:
-            # Remove edges
-            cost -= self.graph[perm[(i - 1) % n], perm[i]]
-            cost -= self.graph[perm[i], perm[(i + 1) % n]]
-            cost -= self.graph[perm[j], perm[(j + 1) % n]]
+#         if i < j:
+#             # Remove edges
+#             cost -= self.graph[perm[(i - 1) % n], perm[i]]
+#             cost -= self.graph[perm[i], perm[(i + 1) % n]]
+#             cost -= self.graph[perm[j], perm[(j + 1) % n]]
             
-            # Add edges
-            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
-            cost += self.graph[perm[i], perm[(j + 1) % n]]
-            cost += self.graph[perm[j], perm[i]]
-        else:
-            # Remove edges
-            cost -= self.graph[perm[(i - 1) % n], perm[i]]
-            cost -= self.graph[perm[i], perm[(i + 1) % n]]
-            cost -= self.graph[perm[(j - 1) % n], perm[j]]
+#             # Add edges
+#             cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+#             cost += self.graph[perm[i], perm[(j + 1) % n]]
+#             cost += self.graph[perm[j], perm[i]]
+#         else:
+#             # Remove edges
+#             cost -= self.graph[perm[(i - 1) % n], perm[i]]
+#             cost -= self.graph[perm[i], perm[(i + 1) % n]]
+#             cost -= self.graph[perm[(j - 1) % n], perm[j]]
             
-            # Add edges
-            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
-            cost += self.graph[perm[(j - 1) % n], perm[i]]
-            cost += self.graph[perm[i], perm[j]]
+#             # Add edges
+#             cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+#             cost += self.graph[perm[(j - 1) % n], perm[i]]
+#             cost += self.graph[perm[i], perm[j]]
         
-        return cost
+#         return cost
     
+
     def jump(self, perm, cost):
         """
         Perform the jump neighbourhood search using delta evaluation.
@@ -267,11 +278,7 @@ class TSP:
                 
             if new_cost < cost - 1e-9:
                 # Create new tour by moving city from i to j
-                new_perm = perm.copy()
-                city = new_perm.pop(i)
-                new_perm.insert(j, city)
-                
-                return new_perm, new_cost
+                return self.jump_pair(perm.copy(), i, j), new_cost
             
             # Reversed: Jump(j, i)
             # Compute cost of new tour (delta evaluation)
@@ -279,11 +286,7 @@ class TSP:
                 
             if new_cost < cost - 1e-9:
                 # Create new tour by moving city from i to j
-                new_perm = perm.copy()
-                city = new_perm.pop(j)
-                new_perm.insert(i, city)
-                
-                return new_perm, new_cost
+                return self.jump_pair(perm.copy(), j, i), new_cost
 
         return perm, cost
     
@@ -305,7 +308,7 @@ class TSP:
             print(f"{i}:")
             
             # Generate random initial permutation
-            basePerm = random_path.generate_random_path(self.dimension)
+            basePerm = self.generate_random_path(self.dimension)
             
             # Calculate the overall cost
             baseCost = self.permutationCost(basePerm)
