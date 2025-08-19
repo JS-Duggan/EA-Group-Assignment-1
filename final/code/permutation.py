@@ -27,12 +27,12 @@ class Permutation:
     #     pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
     #     random.shuffle(pairs)  # Randomize the order of swaps
     #     return pairs
-
+    
     def permutationCost(self, perm):
         n = len(perm)
         cost = 0
         for i in range(n):
-            cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
+            cost += self.graph[perm[i], perm[(i + 1) % n]]
         return cost
     
     def random_pair(self, n):
@@ -73,7 +73,7 @@ class Permutation:
 
         # Distance lookup helper
         def dist(x, y):
-            return self.graph[x * n + y]
+            return self.graph[x, y]
 
         # Neighbors of i and j
         a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
@@ -127,12 +127,12 @@ class Permutation:
             return cost
         
         # Remove edges
-        cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-        cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+        cost -= self.graph[perm[(i - 1) % n], perm[i]]
+        cost -= self.graph[perm[j], perm[(j + 1) % n]]
         
         # Add edges
-        cost += self.graph[perm[(i - 1) % n] * n + perm[j]]
-        cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
+        cost += self.graph[perm[(i - 1) % n], perm[j]]
+        cost += self.graph[perm[i], perm[(j + 1) % n]]
             
         return cost
     
@@ -178,25 +178,25 @@ class Permutation:
         
         if i < j:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
-            cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+            cost -= self.graph[perm[(i - 1) % n], perm[i]]
+            cost -= self.graph[perm[i], perm[(i + 1) % n]]
+            cost -= self.graph[perm[j], perm[(j + 1) % n]]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
-            cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
-            cost += self.graph[perm[j] * n + perm[i]]
+            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+            cost += self.graph[perm[i], perm[(j + 1) % n]]
+            cost += self.graph[perm[j], perm[i]]
         else:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
-            cost -= self.graph[perm[(j - 1) % n] * n + perm[j]]
+            cost -= self.graph[perm[(i - 1) % n], perm[i]]
+            cost -= self.graph[perm[i], perm[(i + 1) % n]]
+            cost -= self.graph[perm[(j - 1) % n], perm[j]]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
-            cost += self.graph[perm[(j - 1) % n] * n + perm[i]]
-            cost += self.graph[perm[i] * n + perm[j]]
-        
+            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+            cost += self.graph[perm[(j - 1) % n], perm[i]]
+            cost += self.graph[perm[i], perm[j]]
+            
         return cost
     
     def jump_pair(self, perm, i, j):
