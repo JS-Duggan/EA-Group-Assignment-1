@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class loadTSP:
     def __init__(self, file_path):
@@ -55,20 +56,20 @@ class loadTSP:
     def _compute_distance_matrix(self):
         """Creates an NxN matrix with Euclidean distances between cities."""
         n = self.dimension
-        self.distance_matrix = [0.0] * (n * n)
+        self.distance_matrix = np.zeros((n, n))
         for row in range(n):
             for col in range(n):
                 if row != col:
                     dx = self.coordinates[row][0] - self.coordinates[col][0]
                     dy = self.coordinates[row][1] - self.coordinates[col][1]
                     dist = math.sqrt(dx * dx + dy * dy)
-                    self.distance_matrix[row * n + col] = dist
+                    self.distance_matrix[row, col] = dist
 
     # def get_coordinates(self):
     #     return self.coordinates
     
     def get_distance(self, row, col):
-        return self.distance_matrix[row * self.dimension + col]
+        return self.distance_matrix[row, col]
 
     def get_distance_matrix(self):
         return self.distance_matrix
