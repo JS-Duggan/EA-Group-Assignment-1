@@ -3,6 +3,8 @@ import os
 import csv
 import typing
 import time
+import sys
+import numpy as np
 
 import random_path
 from load_tsp import loadTSP
@@ -23,7 +25,9 @@ class TSP:
         tsp = loadTSP(testPath)
         
         self.graph = tsp.get_distance_matrix()
+        
         self.dimension = tsp.get_dimension()
+    
         
         self.loadSaveFile(savePath)
         return
@@ -32,7 +36,7 @@ class TSP:
         n = len(perm)
         cost = 0
         for i in range(n):
-            cost += self.graph[perm[i] * n + perm[(i + 1) % n]]
+            cost += self.graph[perm[i], perm[(i + 1) % n]]
         return cost
     
     # def random_pairs(self, n):
@@ -79,7 +83,7 @@ class TSP:
 
         # Distance lookup helper
         def dist(x, y):
-            return self.graph[x * n + y]
+            return self.graph[x, y]
 
         # Neighbors of i and j
         a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
@@ -121,7 +125,8 @@ class TSP:
             i, j = self.random_pair(n)
             n_cost = self.delta_swap_cost(sol, cost, i, j)
             if n_cost < cost - 1e-9:
-                sol[i], sol[j] = sol[j], sol[i]
+                sol[i], sol[j] = sol[j], sol[i]    
+                
                 return sol, n_cost
         return sol, cost
     
@@ -145,12 +150,12 @@ class TSP:
             return cost
         
         # Remove edges
-        cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-        cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+        cost -= self.graph[perm[(i - 1) % n], perm[i]]
+        cost -= self.graph[perm[j], perm[(j + 1) % n]]
         
         # Add edges
-        cost += self.graph[perm[(i - 1) % n] * n + perm[j]]
-        cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
+        cost += self.graph[perm[(i - 1) % n], perm[j]]
+        cost += self.graph[perm[i], perm[(j + 1) % n]]
             
         return cost
     
@@ -185,7 +190,7 @@ class TSP:
                     new_perm[start], new_perm[end] = new_perm[end], new_perm[start]
                     start += 1
                     end -= 1
-                
+                            
                 # Return permutation and cost of cheaper path
                 return new_perm, new_cost
             
@@ -213,24 +218,24 @@ class TSP:
         
         if i < j:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
-            cost -= self.graph[perm[j] * n + perm[(j + 1) % n]]
+            cost -= self.graph[perm[(i - 1) % n], perm[i]]
+            cost -= self.graph[perm[i], perm[(i + 1) % n]]
+            cost -= self.graph[perm[j], perm[(j + 1) % n]]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
-            cost += self.graph[perm[i] * n + perm[(j + 1) % n]]
-            cost += self.graph[perm[j] * n + perm[i]]
+            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+            cost += self.graph[perm[i], perm[(j + 1) % n]]
+            cost += self.graph[perm[j], perm[i]]
         else:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n] * n + perm[i]]
-            cost -= self.graph[perm[i] * n + perm[(i + 1) % n]]
-            cost -= self.graph[perm[(j - 1) % n] * n + perm[j]]
+            cost -= self.graph[perm[(i - 1) % n], perm[i]]
+            cost -= self.graph[perm[i], perm[(i + 1) % n]]
+            cost -= self.graph[perm[(j - 1) % n], perm[j]]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n] * n + perm[(i + 1) % n]]
-            cost += self.graph[perm[(j - 1) % n] * n + perm[i]]
-            cost += self.graph[perm[i] * n + perm[j]]
+            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
+            cost += self.graph[perm[(j - 1) % n], perm[i]]
+            cost += self.graph[perm[i], perm[j]]
         
         return cost
     
@@ -294,6 +299,8 @@ class TSP:
         Returns:
             """
         
+        iteration_limit = 170_000
+        
         for i in range(nIterations):
             print(f"{i}:")
             
@@ -309,15 +316,22 @@ class TSP:
             print("Jump: ", end="")
             jumpCost = baseCost
             jumpPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
                 if (tempCost < jumpCost):
                     jumpCost = tempCost
                 else:
                     break
-            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
-
+                    
+                i += 1
+                    
             
+            # Output time taken
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
             checkpoint = time.perf_counter()
 
 
@@ -325,28 +339,43 @@ class TSP:
             print("Exchange: ", end="")
             exchCost = baseCost
             exchPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 exchPerm, tempCost = self.exchange(exchPerm, exchCost)
-                if (tempCost < exchCost):
+                if (tempCost < exchCost):                    
                     exchCost = tempCost
                 else:
                     break
+                
+                i += 1
+                    
+                        
+            # Output time taken
             print(f"{time.perf_counter() - checkpoint:.2f} seconds")
-            
-
             checkpoint = time.perf_counter()
             
-
             # Calculate results for the inversion
             print("Inversion: ", end="")
             invsCost = baseCost
             invsPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 invsPerm, tempCost = self.inversion(invsPerm, invsCost)
-                if (tempCost < invsCost):
-                    invsCost = tempCost                    
+                if (tempCost < invsCost):                    
+                    invsCost = tempCost
                 else:
                     break
+                
+                i += 1
+                
+
+            # Output time taken
             print(f"{time.perf_counter() - checkpoint:.2f} seconds")
             print()
 
