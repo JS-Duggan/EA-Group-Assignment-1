@@ -29,16 +29,7 @@ class TSP(Permutation):
         super().__init__(testPath)
         
         self.loadSaveFile(savePath)
-        return
-    
-    
-    
-  
-
-        
-   
-
-       
+        return       
 
     def exchange(self, perm, cost):
         """
