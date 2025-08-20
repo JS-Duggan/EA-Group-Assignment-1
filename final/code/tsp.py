@@ -40,7 +40,6 @@ class TSP(Permutation):
 
        
 
-
     def exchange(self, perm, cost):
         """
         Perform the exchange neighbourhood search until a better solution is found
