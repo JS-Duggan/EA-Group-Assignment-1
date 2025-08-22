@@ -7,183 +7,220 @@ obtained.
 
 EIL51:
     Jump: 
-        - mean = 483.73333333333335
-        - median = 485.5
-        - mode = 489
-        - max = 534
-        - min = 452
+        - mean = 490.1666666666667
+        - median = 487.5
+        - mode = 495
+        - max = 557
+        - min = 457
     Exchange: 
-        - mean = 571.2333333333333
-        - median = 573.0
-        - mode = 540
-        - max = 646
-        - min = 520
+        - mean = 581.6333333333333
+        - median = 585.5
+        - mode = 608
+        - max = 675
+        - min = 497
     Inverse: 
-        - mean = 458.3666666666667
-        - median = 458.0
-        - mode = 458
-        - max = 479
-        - min = 434
+        - mean = 462.8
+        - median = 461.5
+        - mode = 469
+        - max = 496
+        - min = 441
 
 EIL76:
     Jump: 
-        - mean = 625.2333333333333
-        - median = 625.5
-        - mode = 626
-        - max = 677
-        - min = 584
+        - mean = 642.5666666666667
+        - median = 637.5
+        - mode = 649
+        - max = 706
+        - min = 576
     Exchange: 
-        - mean = 765.9
-        - median = 757.5
-        - mode = 757
-        - max = 876
-        - min = 668
+        - mean = 804.9333333333333
+        - median = 813.0
+        - mode = 814
+        - max = 863
+        - min = 712
     Inverse: 
-        - mean = 594.0333333333333
-        - median = 592.5
-        - mode = 602
-        - max = 617
-        - min = 572
+        - mean = 600.5666666666667
+        - median = 596.0
+        - mode = 591
+        - max = 638
+        - min = 583
 
 EIL101:
-    Jump: 
-        - mean = 756.9666666666667
-        - median = 760.5
-        - mode = 771
-        - max = 811
-        - min = 696
-    Exchange: 
-        - mean = 949.3666666666667
-        - median = 938.0
-        - mode = 938
-        - max = 1078
-        - min = 867
-    Inverse: 
-        - mean = 704.9666666666667
-        - median = 706.0
-        - mode = 708
-        - max = 728
-        - min = 668
+Jump: 
+    - mean = 760.3666666666667
+    - median = 757.0
+    - mode = 756
+    - max = 792
+    - min = 725
+Exchange: 
+    - mean = 976.7
+    - median = 967.0
+    - mode = 948
+    - max = 1122
+    - min = 875
+Inverse: 
+    - mean = 708.7333333333333
+    - median = 709.5
+    - mode = 712
+    - max = 738
+    - min = 688
 
 ST70:
     Jump: 
-        - mean = 830.5666666666667
-        - median = 816.0
-        - mode = 785
-        - max = 959
-        - min = 736
+        - mean = 863.3333333333334
+        - median = 856.0
+        - mode = 946
+        - max = 1005
+        - min = 753
     Exchange: 
-        - mean = 1088.2
-        - median = 1064.5
-        - mode = 1060
-        - max = 1326
-        - min = 895
+        - mean = 1117.1666666666667
+        - median = 1098.0
+        - mode = 1040
+        - max = 1325
+        - min = 953
     Inverse: 
-        - mean = 737.5666666666667
-        - median = 734.0
-        - mode = 746
-        - max = 778
-        - min = 699
+        - mean = 740.3
+        - median = 737.5
+        - mode = 718
+        - max = 795
+        - min = 706
 
 KROA100:
     Jump: 
-        - mean = 28616.166666666668
-        - median = 28652.5
-        - mode = 30075
-        - max = 33835
-        - min = 24674
+        - mean = 29140.866666666665
+        - median = 29145.0
+        - mode = 29311
+        - max = 34862
+        - min = 25351
     Exchange: 
-        - mean = 40829.833333333336
-        - median = 41584.0
-        - mode = 42764
-        - max = 45536
-        - min = 34897
+        - mean = 41768.3
+        - median = 41603.0
+        - mode = 36663
+        - max = 51584
+        - min = 35445
     Inverse: 
-        - mean = 23564.5
-        - median = 23368.5
-        - mode = 22976
-        - max = 25172
-        - min = 22191
+        - mean = 23755.833333333332
+        - median = 23756.5
+        - mode = 24110
+        - max = 24754
+        - min = 22545
 
 KROC100:
     Jump: 
-        - mean = 27738
-        - median = 27449.5
-        - mode = 24828
-        - max = 33129
-        - min = 23477
+        - mean = 28463.5
+        - median = 28503.0
+        - mode = 28935
+        - max = 34132
+        - min = 25298
     Exchange: 
-        - mean = 41180.5
-        - median = 41089.5
-        - mode = 42382
-        - max = 47888
-        - min = 34765
+        - mean = 40556.23333333333
+        - median = 40423.5
+        - mode = 36625
+        - max = 46582
+        - min = 35402
     Inverse: 
-        - mean = 22928.233333333334
-        - median = 22927.0
-        - mode = 23157
-        - max = 23893
-        - min = 21341
+        - mean = 23100.6
+        - median = 22995.5
+        - mode = 23490
+        - max = 25139
+        - min = 21808
 
 KROD100:
     Jump: 
-        - mean = 28256.766666666666
-        - median = 28362.0
-        - mode = 26412
-        - max = 30500
-        - min = 25309
+        - mean = 28285.466666666667
+        - median = 28111.5
+        - mode = 28737
+        - max = 34528
+        - min = 24219
     Exchange: 
-        - mean = 38608.3
-        - median = 38217.0
-        - mode = 31290
-        - max = 44574
-        - min = 31290
+        - mean = 40789.63333333333
+        - median = 40556.5
+        - mode = 49450
+        - max = 49450
+        - min = 33381
     Inverse: 
-        - mean = 23374.766666666666
-        - median = 23493.5
-        - mode = 23650
-        - max = 24562
-        - min = 22211
+        - mean = 23810.866666666665
+        - median = 23835.5
+        - mode = 23829
+        - max = 24855
+        - min = 22561
 
 LIN105:
     Jump: 
-        - mean = 19552.966666666667
-        - median = 19595.5
-        - mode = 18017
-        - max = 23365
-        - min = 16630
+        - mean = 19409.466666666667
+        - median = 19521.5
+        - mode = 18168
+        - max = 22229
+        - min = 17129
     Exchange: 
-        - mean = 28678.066666666666
-        - median = 28384.0
-        - mode = 26364
-        - max = 33026
-        - min = 22741
+        - mean = 30486.866666666665
+        - median = 30072.0
+        - mode = 34020
+        - max = 37076
+        - min = 25676
     Inverse: 
-        - mean = 15924.666666666666
-        - median = 15964.5
-        - mode = 15993
-        - max = 17173
-        - min = 15128
+        - mean = 15951.633333333333
+        - median = 15910.0
+        - mode = 16220
+        - max = 17445
+        - min = 14926
 
 PCB442:
     Jump: 
-        - mean = 71636.36666666667
-        - median = 71339.5
-        - mode = 73240
-        - max = 82171
-        - min = 65635
+        - mean = 70830.5
+        - median = 70981.5
+        - mode = 67492
+        - max = 76625
+        - min = 66141
     Exchange: 
-        - mean = 130272.23333333334
-        - median = 131184.5
-        - mode = 133946
-        - max = 138626
-        - min = 118990
+        - mean = 136116.86666666667
+        - median = 136315.5
+        - mode = 141323
+        - max = 146353
+        - min = 121425
     Inverse: 
-        - mean = 58136.3
-        - median = 58284.5
-        - mode = 57173
-        - max = 59923
-        - min = 55997
-PR2392:
+        - mean = 58411.566666666666
+        - median = 58505.0
+        - mode = 57570
+        - max = 60242
+        - min = 55435
 
-USA13509:
+PR2392:
+    Jump: 
+        - mean = 768242.1666666666
+        - median = 769198.5
+        - mode = 740143
+        - max = 798657
+        - min = 727814
+    Exchange: 
+        - mean = 1780172.7
+        - median = 1790913.5
+        - mode = 1720802
+        - max = 1889868
+        - min = 1679442
+    Inverse: 
+        - mean = 441559.4
+        - median = 442257.5
+        - mode = 442300
+        - max = 447118
+        - min = 432363
+
+USA13509 (capped at 170,000 iterations):
+    Jump: 
+        - mean = 70490097.63333334
+        - median = 70469314.0
+        - mode = 70402692
+        - max = 73700433
+        - min = 67989429
+    Exchange: 
+        - mean = 228675163.63333333
+        - median = 228643195.0
+        - mode = 228621524
+        - max = 233491329
+        - min = 224664464
+    Inverse: 
+        - mean = 22829244.333333332
+        - median = 22842065.5
+        - mode = 22891136
+        - max = 22965429
+        - min = 22654835

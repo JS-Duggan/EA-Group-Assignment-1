@@ -3,6 +3,7 @@ import os
 import csv
 import typing
 import time
+import numpy as np
 
 from load_tsp import loadTSP
 from permutation import Permutation
@@ -28,7 +29,7 @@ class TSP(Permutation):
         super().__init__(testPath)
         
         self.loadSaveFile(savePath)
-        return
+        return       
 
     def exchange(self, perm, cost):
         """
@@ -51,9 +52,15 @@ class TSP(Permutation):
             i, j = self.random_pair(n)
             n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
+                
+
+
+    
+    
+
                 return self.swap_pair(perm.copy(), i, j), n_cost
         return perm, cost
-    
+
     def inversion(self, perm, cost):
         """
         Perform the inversion neighbourhood search until a better solution is found
@@ -80,8 +87,8 @@ class TSP(Permutation):
                 return self.inversion_pair(perm, i, j), new_cost
             
         # No cost improvement
-        return perm, cost
-    
+        return perm, cost  
+
     def jump(self, perm, cost):
         """
         Perform the jump neighbourhood search using delta evaluation.
@@ -134,6 +141,8 @@ class TSP(Permutation):
         Returns:
             """
         
+        iteration_limit = 170_000
+        
         for i in range(nIterations):
             print(f"{i}:")
             
@@ -149,15 +158,22 @@ class TSP(Permutation):
             print("Jump: ", end="")
             jumpCost = baseCost
             jumpPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
                 if (tempCost < jumpCost):
                     jumpCost = tempCost
                 else:
                     break
-            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
-
+                    
+                i += 1
+                    
             
+            # Output time taken
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
             checkpoint = time.perf_counter()
 
 
@@ -165,28 +181,43 @@ class TSP(Permutation):
             print("Exchange: ", end="")
             exchCost = baseCost
             exchPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 exchPerm, tempCost = self.exchange(exchPerm, exchCost)
-                if (tempCost < exchCost):
+                if (tempCost < exchCost):                    
                     exchCost = tempCost
                 else:
                     break
+                
+                i += 1
+                    
+                        
+            # Output time taken
             print(f"{time.perf_counter() - checkpoint:.2f} seconds")
-            
-
             checkpoint = time.perf_counter()
             
-
             # Calculate results for the inversion
             print("Inversion: ", end="")
             invsCost = baseCost
             invsPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 invsPerm, tempCost = self.inversion(invsPerm, invsCost)
-                if (tempCost < invsCost):
-                    invsCost = tempCost                    
+                if (tempCost < invsCost):                    
+                    invsCost = tempCost
                 else:
                     break
+                
+                i += 1
+                
+
+            # Output time taken
             print(f"{time.perf_counter() - checkpoint:.2f} seconds")
             print()
 
