@@ -1,16 +1,17 @@
-import random
 from permutation import Permutation
 from crossover import Crossover
 from tsp import TSP
 
 class Individual(Permutation):
     crossover: Crossover
-    def generate_single_permutation(self, num_nodes):
-        individual_perm = TSP()
-        individual_perm.generate_random_path(self, num_nodes)
-        return individual_perm
-    def __init__(self):
-        return
+    def __init__(self, tsp: TSP):
+        num_nodes = tsp.dimension
+        self.path = tsp.generate_random_path(num_nodes)
+        
+    def get_path(self):
+        return self.path
+ 
+    
     
     
 
