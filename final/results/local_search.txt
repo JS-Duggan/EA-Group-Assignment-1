@@ -1,0 +1,226 @@
+Test your local algorithms on the instances EIL51, EIL76, EIL101, ST70, KROA100,
+KROC100, KROD100, LIN105, PCB442, PR2392, USA13509 from TSPlib. Run
+each local search algorithm on each instance 30 times where in each run the initial
+permutation is chosen uniformly at random. Report for each algorithm on each
+instance in a file results/local_search.txt the minimum and mean tour length
+obtained.
+
+EIL51:
+    Jump: 
+        - mean = 490.1666666666667
+        - median = 487.5
+        - mode = 495
+        - max = 557
+        - min = 457
+    Exchange: 
+        - mean = 581.6333333333333
+        - median = 585.5
+        - mode = 608
+        - max = 675
+        - min = 497
+    Inverse: 
+        - mean = 462.8
+        - median = 461.5
+        - mode = 469
+        - max = 496
+        - min = 441
+
+EIL76:
+    Jump: 
+        - mean = 642.5666666666667
+        - median = 637.5
+        - mode = 649
+        - max = 706
+        - min = 576
+    Exchange: 
+        - mean = 804.9333333333333
+        - median = 813.0
+        - mode = 814
+        - max = 863
+        - min = 712
+    Inverse: 
+        - mean = 600.5666666666667
+        - median = 596.0
+        - mode = 591
+        - max = 638
+        - min = 583
+
+EIL101:
+Jump: 
+    - mean = 760.3666666666667
+    - median = 757.0
+    - mode = 756
+    - max = 792
+    - min = 725
+Exchange: 
+    - mean = 976.7
+    - median = 967.0
+    - mode = 948
+    - max = 1122
+    - min = 875
+Inverse: 
+    - mean = 708.7333333333333
+    - median = 709.5
+    - mode = 712
+    - max = 738
+    - min = 688
+
+ST70:
+    Jump: 
+        - mean = 863.3333333333334
+        - median = 856.0
+        - mode = 946
+        - max = 1005
+        - min = 753
+    Exchange: 
+        - mean = 1117.1666666666667
+        - median = 1098.0
+        - mode = 1040
+        - max = 1325
+        - min = 953
+    Inverse: 
+        - mean = 740.3
+        - median = 737.5
+        - mode = 718
+        - max = 795
+        - min = 706
+
+KROA100:
+    Jump: 
+        - mean = 29140.866666666665
+        - median = 29145.0
+        - mode = 29311
+        - max = 34862
+        - min = 25351
+    Exchange: 
+        - mean = 41768.3
+        - median = 41603.0
+        - mode = 36663
+        - max = 51584
+        - min = 35445
+    Inverse: 
+        - mean = 23755.833333333332
+        - median = 23756.5
+        - mode = 24110
+        - max = 24754
+        - min = 22545
+
+KROC100:
+    Jump: 
+        - mean = 28463.5
+        - median = 28503.0
+        - mode = 28935
+        - max = 34132
+        - min = 25298
+    Exchange: 
+        - mean = 40556.23333333333
+        - median = 40423.5
+        - mode = 36625
+        - max = 46582
+        - min = 35402
+    Inverse: 
+        - mean = 23100.6
+        - median = 22995.5
+        - mode = 23490
+        - max = 25139
+        - min = 21808
+
+KROD100:
+    Jump: 
+        - mean = 28285.466666666667
+        - median = 28111.5
+        - mode = 28737
+        - max = 34528
+        - min = 24219
+    Exchange: 
+        - mean = 40789.63333333333
+        - median = 40556.5
+        - mode = 49450
+        - max = 49450
+        - min = 33381
+    Inverse: 
+        - mean = 23810.866666666665
+        - median = 23835.5
+        - mode = 23829
+        - max = 24855
+        - min = 22561
+
+LIN105:
+    Jump: 
+        - mean = 19409.466666666667
+        - median = 19521.5
+        - mode = 18168
+        - max = 22229
+        - min = 17129
+    Exchange: 
+        - mean = 30486.866666666665
+        - median = 30072.0
+        - mode = 34020
+        - max = 37076
+        - min = 25676
+    Inverse: 
+        - mean = 15951.633333333333
+        - median = 15910.0
+        - mode = 16220
+        - max = 17445
+        - min = 14926
+
+PCB442:
+    Jump: 
+        - mean = 70830.5
+        - median = 70981.5
+        - mode = 67492
+        - max = 76625
+        - min = 66141
+    Exchange: 
+        - mean = 136116.86666666667
+        - median = 136315.5
+        - mode = 141323
+        - max = 146353
+        - min = 121425
+    Inverse: 
+        - mean = 58411.566666666666
+        - median = 58505.0
+        - mode = 57570
+        - max = 60242
+        - min = 55435
+
+PR2392:
+    Jump: 
+        - mean = 768242.1666666666
+        - median = 769198.5
+        - mode = 740143
+        - max = 798657
+        - min = 727814
+    Exchange: 
+        - mean = 1780172.7
+        - median = 1790913.5
+        - mode = 1720802
+        - max = 1889868
+        - min = 1679442
+    Inverse: 
+        - mean = 441559.4
+        - median = 442257.5
+        - mode = 442300
+        - max = 447118
+        - min = 432363
+
+USA13509 (capped at 170,000 iterations):
+    Jump: 
+        - mean = 70490097.63333334
+        - median = 70469314.0
+        - mode = 70402692
+        - max = 73700433
+        - min = 67989429
+    Exchange: 
+        - mean = 228675163.63333333
+        - median = 228643195.0
+        - mode = 228621524
+        - max = 233491329
+        - min = 224664464
+    Inverse: 
+        - mean = 22829244.333333332
+        - median = 22842065.5
+        - mode = 22891136
+        - max = 22965429
+        - min = 22654835

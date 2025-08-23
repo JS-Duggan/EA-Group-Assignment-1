@@ -2,11 +2,21 @@ import random
 import os
 import csv
 import typing
+import time
+import numpy as np
 
-class TSP:
+from load_tsp import loadTSP
+from permutation import Permutation
+
+class TSP(Permutation):
     graph = [[]]
     saveFile: typing.TextIO
     csvWriter: csv.writer
+
+    def generate_random_path(self, num_nodes):
+        path = list(range(0, num_nodes))
+        random.shuffle(path)
+        return path
 
     def __init__(self, testPath, savePath):
         """Init class
@@ -15,52 +25,11 @@ class TSP:
         edits private variable 'graph'
         graph is 2d array, where graph[i][j] = distance between i and j
         """
-        self.graph = [[]]
+        
+        super().__init__(testPath)
+        
         self.loadSaveFile(savePath)
-        return
-
-    def random_pairs(self, n):
-         # Generate all unique index pairs (i, j) where i < j
-        pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
-        random.shuffle(pairs)  # Randomize the order of swaps
-        return pairs
-
-    def delta_swap_cost(self, perm, cost, i, j):
-        """
-        Calculate the new tour cost if cities at positions i and j are swapped,
-        using delta evaluation instead of recalculating the whole cost.
-
-        Args:
-            perm (list[int]): Current tour
-            cost (float): Cost of the tour
-            i (int): First swap position
-            j (int): Second swap position
-
-        Returns:
-            float: New tour cost after swapping i and j"""
-        n = len(perm)
-
-        # Wrap-around for circular tour
-        a, b = perm[(i - 1) % n], perm[i]
-        c = perm[(i + 1) % n]
-        d, e = perm[(j - 1) % n], perm[j]
-        f = perm[(j + 1) % n]
-
-        # Adjacent swap case
-        if j == i + 1 or (i == 0 and j == n - 1):
-            old_cost = self.graph[a][b] + self.graph[e][f]
-            new_cost = self.graph[a][e] + self.graph[b][f]
-        else:  # Non-adjacent case
-            old_cost = (
-                self.graph[a][b] + self.graph[b][c] +
-                self.graph[d][e] + self.graph[e][f]
-            )
-            new_cost = (
-                self.graph[a][e] + self.graph[e][c] +
-                self.graph[d][b] + self.graph[b][f]
-            )
-
-        return cost + (new_cost - old_cost)
+        return       
 
     def exchange(self, perm, cost):
         """
@@ -74,53 +43,90 @@ class TSP:
             (list[int], float): The improved permutation and its cost.
         """
         # create a copy of perm, not a reference
-        sol = perm.copy()
-        n = len(sol)
+        n = len(perm)
 
-        pairs = self.random_pairs(n)
+        # pairs = self.random_pairs(n)
+        
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
+            n_cost = self.delta_swap_cost(perm, cost, i, j)
+            if n_cost < cost - 1e-9:
+                
 
-        for i, j in pairs:
-            n_cost = self.delta_swap_cost(sol, cost, i, j)
-            if n_cost < cost:
-                return sol, cost
-        return sol, cost
+
     
+    
+
+                return self.swap_pair(perm.copy(), i, j), n_cost
+        return perm, cost
+
     def inversion(self, perm, cost):
         """
         Perform the inversion neighbourhood search until a better solution is found
         if no better solution is found, returns input permutation and cost.
         Inversion range is random.
         Args:
-            perm (list[tuple(int row, int col)]): Current tour
+            perm (list[int]): Current tour
             cost (float): Cost of the tour
         Returns:
-            (list[tuple(int row, int col)], float): The improved permutation and its cost.
+            (list[int], float): The improved permutation and its cost.
         """
+        n = len(perm)
+        # pairs = self.random_pairs(n)
         
-        new_perm = perm.copy()
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
         
-        pairs = self.random_pairs(len(new_perm))
-        
-        cols = len(self.graph[0])
-        
-        for i, j in pairs:
-            old_cost = 0
-            for i in range(i, j - 1):
-                old_cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
+            new_cost = self.delta_inversion_cost(perm, cost, i, j)
             
-            # Perform inversion (inclusive of j as random pairs has j < n)
-            for k, l in zip(range(i, j), range(j, i, -1)):
-                temp = new_perm[k]
-                new_perm[k] = new_perm[l]
-                new_perm[l] = new_perm[k]
+            # Improved cost
+            if new_cost < cost - 1e-9:
+                # Return permutation and cost of cheaper path
+                return self.inversion_pair(perm, i, j), new_cost
             
-            cost = 0
-            for i in range(i, j - 1):
-                cost += self.graph[new_perm[i][0] * cols + new_perm[i][1]][new_perm[i + 1][0] * cols + new_perm[i + 1][1]]
+        # No cost improvement
+        return perm, cost  
+
+    def jump(self, perm, cost):
+        """
+        Perform the jump neighbourhood search using delta evaluation.
+        Moves a city from position i to j and shifts others accordingly.
+
+        Args:
+            perm (list[int]): Current tour
+            cost (float): Cost of the tour
+
+        Returns:
+            (list[int], float): The improved permutation and its cost.
+        """
+        n = len(perm)
+        # indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        
+        # indices = [(i, j) for i in range(n) for j in range(n) if i < j]
+        # random.shuffle(indices)
+
+        max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
+        for _ in range(max_pairs):
+            i, j = self.random_pair(n)
+            
+            # Jump(i, j)
+            # Compute cost of new tour (delta evaluation)
+            new_cost = self.delta_jump_cost(perm, cost, i, j)
                 
-            if cost < old_cost:
-                return new_perm, cost
-        
+            if new_cost < cost - 1e-9:
+                # Create new tour by moving city from i to j
+                return self.jump_pair(perm.copy(), i, j), new_cost
+            
+            # Reversed: Jump(j, i)
+            # Compute cost of new tour (delta evaluation)
+            new_cost = self.delta_jump_cost(perm, cost, j, i)
+                
+            if new_cost < cost - 1e-9:
+                # Create new tour by moving city from i to j
+                return self.jump_pair(perm.copy(), j, i), new_cost
+
         return perm, cost
     
     def localSearch(self, nIterations):
@@ -129,44 +135,91 @@ class TSP:
         Results are saved to a csv file for processing later
 
         Args:
+            basePerm (list[int]): Initial tour
             nIterations (striintng): The number of attempts the algorithm will have to produce an optimised value 
 
         Returns:
             """
         
+        iteration_limit = 170_000
+        
         for i in range(nIterations):
-            basePerm = [1, 2, 3]  # ADD: Generate the permutation
-            baseCost = 10 # ADD: Calculate the overall cost
-
+            print(f"{i}:")
+            
+            # Generate random initial permutation
+            basePerm = self.generate_random_path(self.dimension)
+            
+            # Calculate the overall cost
+            baseCost = self.permutationCost(basePerm)
+            
+            checkpoint = time.perf_counter()
+            
             # Calculate results for the jump
+            print("Jump: ", end="")
             jumpCost = baseCost
             jumpPerm = basePerm
-            '''while True:
+            i = 0
+            while True:
+                if i >= iteration_limit:
+                    break
+                
                 jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
                 if (tempCost < jumpCost):
                     jumpCost = tempCost
                 else:
-                    break'''
+                    break
+                    
+                i += 1
+                    
+            
+            # Output time taken
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+            checkpoint = time.perf_counter()
+
 
             # Calculate results for the exchange
+            print("Exchange: ", end="")
             exchCost = baseCost
             exchPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 exchPerm, tempCost = self.exchange(exchPerm, exchCost)
-                if (tempCost < exchCost):
+                if (tempCost < exchCost):                    
                     exchCost = tempCost
                 else:
                     break
-
+                
+                i += 1
+                    
+                        
+            # Output time taken
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+            checkpoint = time.perf_counter()
+            
             # Calculate results for the inversion
+            print("Inversion: ", end="")
             invsCost = baseCost
             invsPerm = basePerm
+            i = 0
             while True:
+                if i >= iteration_limit:
+                    break
+                
                 invsPerm, tempCost = self.inversion(invsPerm, invsCost)
-                if (tempCost < invsCost):
+                if (tempCost < invsCost):                    
                     invsCost = tempCost
                 else:
                     break
+                
+                i += 1
+                
+
+            # Output time taken
+            print(f"{time.perf_counter() - checkpoint:.2f} seconds")
+            print()
 
 
             self.saveData(jumpPerm, jumpCost, exchPerm, exchCost, invsPerm, invsCost)
@@ -216,3 +269,6 @@ class TSP:
             """
         self.csvWriter.writerow([jumpTour, jumpCost, exchangeTour, exchangeCost, inverseTour, inverseCost])
         self.saveFile.flush()
+        
+    def getSavePath(self):
+        return self.saveFile.name
