@@ -4,7 +4,6 @@ import csv
 import typing
 import time
 
-import random_path
 from load_tsp import loadTSP
 
 class TSP:
