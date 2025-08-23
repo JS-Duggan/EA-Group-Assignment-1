@@ -1,0 +1,4 @@
+# Inver-over EA results (mean, stddev over runs)
+# runs=30, pop=50, gens=20000, p_random=0.02
+instance,mean_cost,stddev
+eil51.tsp,428.920256,0.065093
