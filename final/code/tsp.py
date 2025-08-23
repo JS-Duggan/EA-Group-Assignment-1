@@ -29,6 +29,7 @@ class TSP(Permutation):
         super().__init__(testPath)
         
         self.loadSaveFile(savePath)
+        
         return       
 
     def exchange(self, perm, cost):
@@ -52,12 +53,6 @@ class TSP(Permutation):
             i, j = self.random_pair(n)
             n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
-                
-
-
-    
-    
-
                 return self.swap_pair(perm.copy(), i, j), n_cost
         return perm, cost
 
@@ -102,11 +97,6 @@ class TSP(Permutation):
             (list[int], float): The improved permutation and its cost.
         """
         n = len(perm)
-        # indices = [(i, j) for i in range(n) for j in range(n) if i != j]
-        
-        # indices = [(i, j) for i in range(n) for j in range(n) if i < j]
-        # random.shuffle(indices)
-
         max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
