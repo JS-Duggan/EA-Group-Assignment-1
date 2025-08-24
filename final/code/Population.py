@@ -1,4 +1,4 @@
-from Individual import Individual
+from individual import Individual
 from permutation import Permutation
 from tsp import TSP
 

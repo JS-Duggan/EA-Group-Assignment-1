@@ -27,8 +27,8 @@ import numpy as np
 
 from tsp import TSP
 from crossover import Crossover
-from Population import Population
-from Individual import Individual
+from population import Population
+from individual import Individual
 from selection import Selection
 
 
