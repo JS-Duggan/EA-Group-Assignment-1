@@ -18,7 +18,7 @@ class TSP(Permutation):
         random.shuffle(path)
         return path
 
-    def __init__(self, shm_name: str, shape, dtype, savePath):
+    def __init__(self, testPath, savePath):
         """Init class
 
         takes path to test case as input
@@ -26,10 +26,9 @@ class TSP(Permutation):
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        super().__init__(shm_name, shape, dtype)
+        super().__init__(testPath)
         
         self.loadSaveFile(savePath)
-        
         return       
 
     def exchange(self, perm, cost):
@@ -53,6 +52,12 @@ class TSP(Permutation):
             i, j = self.random_pair(n)
             n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
+                
+
+
+    
+    
+
                 return self.swap_pair(perm.copy(), i, j), n_cost
         return perm, cost
 
@@ -97,6 +102,11 @@ class TSP(Permutation):
             (list[int], float): The improved permutation and its cost.
         """
         n = len(perm)
+        # indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+        
+        # indices = [(i, j) for i in range(n) for j in range(n) if i < j]
+        # random.shuffle(indices)
+
         max_pairs = n * (n - 1) // 2 # Number of possible pairs where i < j
         for _ in range(max_pairs):
             i, j = self.random_pair(n)
@@ -119,7 +129,7 @@ class TSP(Permutation):
 
         return perm, cost
     
-    def localSearch(self, nIterations, dimension):
+    def localSearch(self, nIterations):
         """
         Performs localSearch to determine an optimised route to the Traveling Salesman Problem 
         Results are saved to a csv file for processing later
@@ -137,26 +147,20 @@ class TSP(Permutation):
             print(f"{i}:")
             
             # Generate random initial permutation
-            basePerm = self.generate_random_path(dimension)
-            
-            # print('2')
+            basePerm = self.generate_random_path(self.dimension)
             
             # Calculate the overall cost
             baseCost = self.permutationCost(basePerm)
             
-            # print(3)
-            
-            
             checkpoint = time.perf_counter()
-            
             
             # Calculate results for the jump
             print("Jump: ", end="")
             jumpCost = baseCost
             jumpPerm = basePerm
-            j = 0
+            i = 0
             while True:
-                if j >= iteration_limit:
+                if i >= iteration_limit:
                     break
                 
                 jumpPerm, tempCost = self.jump(jumpPerm, jumpCost)
@@ -165,7 +169,7 @@ class TSP(Permutation):
                 else:
                     break
                     
-                j += 1
+                i += 1
                     
             
             # Output time taken
@@ -177,9 +181,9 @@ class TSP(Permutation):
             print("Exchange: ", end="")
             exchCost = baseCost
             exchPerm = basePerm
-            j = 0
+            i = 0
             while True:
-                if j >= iteration_limit:
+                if i >= iteration_limit:
                     break
                 
                 exchPerm, tempCost = self.exchange(exchPerm, exchCost)
@@ -188,7 +192,7 @@ class TSP(Permutation):
                 else:
                     break
                 
-                j += 1
+                i += 1
                     
                         
             # Output time taken
@@ -199,9 +203,9 @@ class TSP(Permutation):
             print("Inversion: ", end="")
             invsCost = baseCost
             invsPerm = basePerm
-            j = 0
+            i = 0
             while True:
-                if j >= iteration_limit:
+                if i >= iteration_limit:
                     break
                 
                 invsPerm, tempCost = self.inversion(invsPerm, invsCost)
@@ -210,7 +214,7 @@ class TSP(Permutation):
                 else:
                     break
                 
-                j += 1
+                i += 1
                 
 
             # Output time taken
@@ -232,35 +236,21 @@ class TSP(Permutation):
 
         Returns:
             """
-            
-        file_exists = os.path.exists(filePath)
+        
+        # if the file exists, give it a unique name so that it does not get overriden
+        tempFileName = filePath
+        pos = len(filePath) - 4 # ignore the .csv at the end
+        n = 1
+        while os.path.exists(tempFileName):
+            tempFileName = filePath[:pos] + '(' + n.__str__() + ')' + filePath[pos:]
+            n += 1
+        filePath = tempFileName
 
-        # Open the file in append mode if it exists, otherwise create it
-        self.saveFile = open(filePath, 'a', newline='')
+        # Generate the file and the csv writer for use
+        self.saveFile = open(filePath, 'w', newline='')
         self.csvWriter = csv.writer(self.saveFile)
-
-        # If the file was just created, write the header
-        if not file_exists:
-            self.csvWriter.writerow(['Jump - tour', 'Jump - cost', 
-                                    'Exchange - tour', 'Exchange - cost', 
-                                    'Inverse - tour', 'Inverse - cost'])
-            self.saveFile.flush()
-
-                
-        # # if the file exists, give it a unique name so that it does not get overriden
-        # tempFileName = filePath
-        # pos = len(filePath) - 4 # ignore the .csv at the end
-        # n = 1
-        # while os.path.exists(tempFileName):
-        #     tempFileName = filePath[:pos] + '(' + n.__str__() + ')' + filePath[pos:]
-        #     n += 1
-        # filePath = tempFileName
-
-        # # Generate the file and the csv writer for use
-        # self.saveFile = open(filePath, 'w', newline='')
-        # self.csvWriter = csv.writer(self.saveFile)
-        # self.csvWriter.writerow(['Jump - tour', 'Jump - cost', 'Exchange - tour', 'Exchange - cost', 'Inverse - tour', 'Inverse - cost'])
-        # self.saveFile.flush()
+        self.csvWriter.writerow(['Jump - tour', 'Jump - cost', 'Exchange - tour', 'Exchange - cost', 'Inverse - tour', 'Inverse - cost'])
+        self.saveFile.flush()
 
     def saveData(self, jumpTour, jumpCost, exchangeTour, exchangeCost, inverseTour, inverseCost):
         """
