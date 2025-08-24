@@ -1,0 +1,76 @@
+import multiprocessing
+from multiprocessing import Pool
+from multiprocessing import shared_memory
+import numpy as np
+import argparse
+
+from load_tsp import loadTSP
+
+from inverover import run_on_instance
+
+# Each parallel process runs
+def wrapper(args):
+    return evolution(*args) # EA function
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('tsp_instance')
+    parser.add_argument('population')
+    parser.add_argument('generations')
+    parser.add_argument('iterations')
+    args = parser.parse_args()
+    tsp_instance = args.tsp_instance
+    population = int(args.population)
+    generations = int(args.generations)
+    iterations = int(args.iterations)
+    
+    path = f'final/code/test_cases/{tsp_instance}.tsp'
+    
+    # Number of parallel processes
+    num_workers = multiprocessing.cpu_count()
+    runs_per_worker = iterations // num_workers
+    extra_runs = iterations % num_workers
+    
+    data = loadTSP(path)
+    graph = data.get_distance_matrix()
+    
+    # Create shared memory
+    shm = shared_memory.SharedMemory(create=True, size=graph.nbytes)
+    shared_graph = np.ndarray(graph.shape, dtype=graph.dtype, buffer=shm.buf)
+    shared_graph[:] = graph[:]  # copy data
+    del graph
+    del data
+    
+    # Arguments passed to each process
+    all_tasks = []
+    for i in range(num_workers):
+        runs = runs_per_worker + (1 if i < extra_runs else 0)
+        if runs > 0:
+            all_tasks.append((shm.name, shared_graph.shape, shared_graph.dtype, runs, population, generations))
+    
+    
+    with Pool(processes=num_workers) as pool:
+        results = pool.map(wrapper, all_tasks)
+
+    print(results)
+    
+    res = []
+    for i in range(len(results)):
+        res.append(results[i][0])
+        
+    
+    
+    mean = np.mean(res)
+    std = np.std(res)
+    
+    print(f"mean: {mean}")
+    print(f"std: {std}")
+    
+    
+    # Cleanup
+    shm.close()
+    shm.unlink()
+
+# Need this for it to work
+if __name__ == "__main__":
+    main()
