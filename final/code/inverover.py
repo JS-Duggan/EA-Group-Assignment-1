@@ -5,25 +5,48 @@ import numpy as np
 import time
 from multiprocessing import shared_memory
 
-def tour_cost(graph: np.ndarray, tour: List[int]) -> float:
-    """Compute cyclic tour cost."""
+def tourCost(graph: np.ndarray, tour: List[int]) -> float:
+    """
+    Compute cyclic tour cost.
+
+    Inputs: 
+        graph (ndarray): the graph of distances between nodes
+        tour (list[int]): the permitation for the tour
+    
+    Outputs
+        cost (float): the cost of the tour
+    """
     n = len(tour)
     total = 0.0
     for i in range(n):
         total += graph[tour[i], tour[(i + 1) % n]]
     return float(total)
 
-def make_pos(tour: List[int]) -> List[int]:
-    """pos[city] = index of city in tour."""
+def makePos(tour: List[int]) -> List[int]:
+    """
+    pos[city] = index of city in tour.
+
+    Inputs:
+        tour (list[imt]): The permutation tour for the TSP
+    
+    Outputs:
+        pos (list[int]): the new generated list
+    """
     pos = [0] * len(tour)
     for i, c in enumerate(tour):
         pos[c] = i
     return pos
 
-def invert_segment_circular_with_pos(tour: List[int], pos: List[int], start_idx: int, end_idx: int) -> None:
+def invertSegmentCircularWithPos(tour: List[int], pos: List[int], start_idx: int, end_idx: int) -> None:
     """
     Reverse the segment from start_idx to end_idx (inclusive) on the circular tour.
     Updates 'pos' accordingly.
+
+    Inputs:
+        tour (list[int]): The permutation tour for the TSP
+        pos (list[int]): The list of positions
+        start_idx (int): The starting index of the inversion
+        end_idx (int): The final index for the inversion
     """
     n = len(tour)
     if start_idx == end_idx:
@@ -61,6 +84,18 @@ class InverOverEA:
                  generations: int = 20000,
                  seed: Optional[int] = None,
                  progress_every: int = 0):
+        """
+        Sets up the class with required variables and generates a seed if none a provided. 
+
+        Inputs: 
+            graph (ndarray): data of the distances between each node
+            population_size (int): number of individuals in the population
+            generations (int): number of generations that the algorithm will run for
+            p_random (float): the chance of a mutation
+            seed (int): the initial seed the permutation will be setup with
+            progress_every (int): the probability of an individual being progressed
+        """
+
         self.graph = graph
         self.n = graph.shape[0]
         self.p = p_random
@@ -70,16 +105,36 @@ class InverOverEA:
         if seed is not None:
             random.seed(seed)
 
-    def _random_perm(self) -> List[int]:
+    def _randomPerm(self) -> List[int]:
+        """
+        Generates a random permutation tour through the TSP
+
+        Outputs:
+            tour (list[int]): The generated tour
+        """
         t = list(range(self.n))
         random.shuffle(t)
         return t
 
-    def _offspring_inver_over(self,
+    def _offspringInverOver(self,
                               parent: List[int], pos_parent: List[int],
                               population: List[List[int]], pop_pos: List[List[int]],
                               parent_cost: float) -> Tuple[List[int], List[int], float]:
-        """Produce one child by Inver-over with delta-cost and position maintenance."""
+        """
+        Produce one child by Inver-over with delta-cost and position maintenance.
+        
+        Inputs:
+            parent (list[int]): The permutation of the parent
+            pos_parent (list[int]): The positions list of the parent
+            population (list[list[int]]): A list of all permutations in the popultation
+            pos_population (list[list[int]]): A list of all positions in the popultation
+            parent_cost (float): The cost of the parent permutation
+
+        Outputs
+            child (list[int]): The resultant child permutation
+            pos (list[int]): The resutlant child position list
+            cost (float): the resultant cost of the child permutation
+        """
         n = self.n
         g = self.graph
 
@@ -131,7 +186,7 @@ class InverOverEA:
             cost += float(delta)
 
             # perform inversion with pos updates
-            invert_segment_circular_with_pos(child, pos, next_idx, j_idx)
+            invertSegmentCircularWithPos(child, pos, next_idx, j_idx)
 
             # advance: new current city becomes c0
             c = c0
@@ -140,10 +195,18 @@ class InverOverEA:
         return child, pos, cost
 
     def run(self) -> Tuple[List[int], float]:
+        """
+        Runs the inverover algorithm
+
+        Outputs:
+            best (list[int]): The calcualted best permutation
+            best_cost (float): The resultant cost for the permutation
+        """
+
         # init population, positions, costs
         pop = [self._random_perm() for _ in range(self.pop_size)]
-        pop_pos = [make_pos(t) for t in pop]
-        costs = [tour_cost(self.graph, t) for t in pop]
+        pop_pos = [makePos(t) for t in pop]
+        costs = [tourCost(self.graph, t) for t in pop]
 
         best_idx = min(range(self.pop_size), key=lambda i: costs[i])
         best = pop[best_idx][:]
@@ -175,9 +238,26 @@ class InverOverEA:
 
         return best, float(best_cost)
 
-def run_on_instance(shm_name: str, shape, dtype, runs: int = 30, population_size: int = 50, generations: int = 20000,
+def runOnInstance(shm_name: str, shape, dtype, runs: int = 30, population_size: int = 50, generations: int = 20000,
                     p_random: float = 0.02, seed: Optional[int] = None, progress_every: int = 0) -> Tuple[float, float]:
-    """Load TSPLIB via your loader, run Inver-over `runs` times, return (mean, stddev)."""
+    """
+    Load TSPLIB via your loader, run Inver-over `runs` times, return (mean, stddev).
+
+    Inputs:
+        shm_name (str): name of the shared memory
+        shape (Shape): Shape of the data array
+        dtype (dType): Data type of the data array
+        runs (int): number of times the algorthm will be processed
+        population_size (int): number of individuals in the population
+        generations (int): number of generations that the algorithm will run for
+        p_random (float): the chance of a mutation
+        seed (int): the initial seed the permutation will be setup with
+        progress_every (int): the probability of an individual being progressed
+
+    Outputs
+        mean (float): The mean of the results
+        std (float): The standard deviation of the results
+    """
     
     # Set reference to graph in shared memory
     existing_shm = shared_memory.SharedMemory(name=shm_name)

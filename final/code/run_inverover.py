@@ -2,19 +2,34 @@
 from __future__ import annotations
 import argparse, glob, time
 from pathlib import Path
-from inverover import run_on_instance
+from inverover import runOnInstance
 import multiprocessing
 from multiprocessing import Pool
 from multiprocessing import shared_memory
 from collections import defaultdict
 import numpy as np
 
-from load_tsp import loadTSP
+from load_tsp import LoadTSP
 
 def wrapper(args):
-    return run_on_instance(*args)
+    """
+    runs the inverover algorithm on a set of arguments
+
+    Inputs:
+        args (): argments for the function
+
+    Outputs
+        mean (float): The mean of the results
+        std (float): The standard deviation of the results
+    """
+
+    return runOnInstance(*args)
 
 def main():
+    """
+    Processes the input and runs the inverover algorithm on the specified TSP instance
+    """
+
     ap = argparse.ArgumentParser(
         description="Run Inver-over EA (Tao & Michalewicz) on TSPLIB instances and write results/inverover.txt"
     )
@@ -48,7 +63,7 @@ def main():
         all_tasks = []
         for p in files:
             # Load graph once
-            data = loadTSP(p)
+            data = LoadTSP(p)
             graph = data.get_distance_matrix()
             
             # Create shared memory

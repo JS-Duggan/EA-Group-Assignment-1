@@ -4,12 +4,23 @@ from multiprocessing import shared_memory
 import numpy as np
 import argparse
 
-from load_tsp import loadTSP
+from load_tsp import LoadTSP
 
-from inverover import run_on_instance
+from inverover import RunOnInstance
 
 # Each parallel process runs
 def wrapper(args):
+    """
+    runs the evolition algorithm on a set of arguments
+
+    Inputs:
+        args (): argments for the function
+
+    Outputs
+        mean (float): The mean of the results
+        std (float): The standard deviation of the results
+    """
+
     return evolution(*args) # EA function
 
 def main():
@@ -31,7 +42,7 @@ def main():
     runs_per_worker = iterations // num_workers
     extra_runs = iterations % num_workers
     
-    data = loadTSP(path)
+    data = LoadTSP(path)
     graph = data.get_distance_matrix()
     
     # Create shared memory

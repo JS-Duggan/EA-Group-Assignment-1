@@ -6,10 +6,14 @@ class Selection:
 
 
     # Fitness Selection Roulette Wheel
-    def fitness_proportional(self, population, fitnesses):
+    def fitnessProportional(self, population, fitnesses):
         """
         Expected copies of i: μ * f(i) / Σf
         Spin a 1-armed wheel n times
+
+        Inputs:
+            population (list[int]): Size of the generated popultation
+            fitness (list[int]): list of fitnesses in the popultaion
         """
         size = len(population)
         total_fitness = sum(fitnesses)
