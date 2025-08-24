@@ -1,0 +1,212 @@
+# Evolutionary Algorithm Results Summary
+# Best costs from 20,000 generation runs for each population size
+
+## EIL51:
+### Population 20:
+    - BALANCED: best = 607.24, avg = 614.09, worst = 744.26
+    - EXPLOITATION: best = 618.18, avg = 618.92, worst = 632.81
+    - EXPLORATION: best = 500.9, avg = 514.85, worst = 569.99
+
+### Population 50:
+    - BALANCED: best = 499.73, avg = 543.04, worst = 664.12
+    - EXPLOITATION: best = 502.33, avg = 550.2, worst = 684.31
+    - EXPLORATION: best = 465.11, avg = 517.5, worst = 651.13
+
+### Population 100:
+    - BALANCED: best = 446.64, avg = 489.0, worst = 621.95
+    - EXPLOITATION: best = 441.98, avg = 497.11, worst = 627.95
+    - EXPLORATION: best = 389.07, avg = 476.43, worst = 641.51
+
+### Population 200:
+    - BALANCED: best = 446.64, avg = 489.0, worst = 621.95
+    - EXPLOITATION: best = 441.98, avg = 497.11, worst = 627.95
+    - EXPLORATION: best = 389.07, avg = 476.43, worst = 641.51
+
+## EIL71:
+### Population 20:
+    - BALANCED: best = 796.77, avg = 823.71, worst = 823.71
+    - EXPLOITATION: best = 582.93, avg = 590.55, worst = 590.55
+    - EXPLORATION: best = 654.02, avg = 698.25, worst = 773.73
+
+### Population 50:
+    - BALANCED: best = 796.77, avg = 823.71, worst = 823.71
+    - EXPLOITATION: best = 582.93, avg = 590.55, worst = 590.55
+    - EXPLORATION: best = 654.02, avg = 698.25, worst = 773.73
+
+### Population 100:
+    - BALANCED: best = 796.77, avg = 823.71, worst = 823.71
+    - EXPLOITATION: best = 582.93, avg = 590.55, worst = 590.55
+    - EXPLORATION: best = 654.02, avg = 698.25, worst = 773.73
+
+### Population 200:
+    - BALANCED: best = 796.77, avg = 823.71, worst = 823.71
+    - EXPLOITATION: best = 582.93, avg = 590.55, worst = 590.55
+    - EXPLORATION: best = 654.02, avg = 698.25, worst = 773.73
+
+## ST70:
+### Population 20:
+    - BALANCED: best = 956.45, avg = 1036.24, worst = 1163.14
+    - EXPLOITATION: best = 680.88, avg = 787.55, worst = 926.64
+    - EXPLORATION: best = 772.42, avg = 860.79, worst = 1001.02
+
+### Population 50:
+    - BALANCED: best = 956.45, avg = 1036.24, worst = 1163.14
+    - EXPLOITATION: best = 680.88, avg = 787.55, worst = 926.64
+    - EXPLORATION: best = 772.42, avg = 860.79, worst = 1001.02
+
+### Population 100:
+    - BALANCED: best = 817.22, avg = 885.3, worst = 955.81
+    - EXPLOITATION: best = 556.55, avg = 606.19, worst = 736.63
+    - EXPLORATION: best = 627.64, avg = 714.81, worst = 847.0
+
+### Population 200:
+    - BALANCED: best = 956.45, avg = 1036.24, worst = 1163.14
+    - EXPLOITATION: best = 680.88, avg = 787.55, worst = 926.64
+    - EXPLORATION: best = 772.42, avg = 860.79, worst = 1001.02
+
+## KROA100:
+### Population 20:
+    - BALANCED: best = 43042.82, avg = 43417.87, worst = 50543.67
+    - EXPLOITATION: best = 46431.06, avg = 46431.06, worst = 46431.06
+    - EXPLORATION: best = 30927.57, avg = 31342.09, worst = 34646.83
+
+### Population 50:
+    - BALANCED: best = 43042.82, avg = 43417.87, worst = 50543.67
+    - EXPLOITATION: best = 46431.06, avg = 46431.06, worst = 46431.06
+    - EXPLORATION: best = 30927.57, avg = 31342.09, worst = 34646.83
+
+### Population 100:
+    - BALANCED: best = 43042.82, avg = 43417.87, worst = 50543.67
+    - EXPLOITATION: best = 46431.06, avg = 46431.06, worst = 46431.06
+    - EXPLORATION: best = 30927.57, avg = 31342.09, worst = 34646.83
+
+### Population 200:
+    - BALANCED: best = 43042.82, avg = 43417.87, worst = 50543.67
+    - EXPLOITATION: best = 46431.06, avg = 46431.06, worst = 46431.06
+    - EXPLORATION: best = 30927.57, avg = 31342.09, worst = 34646.83
+
+## KROC100:
+### Population 20:
+    - BALANCED: best = 41074.22, avg = 42041.31, worst = 53196.33
+    - EXPLOITATION: best = 23463.23, avg = 23603.09, worst = 24874.5
+    - EXPLORATION: best = 31322.63, avg = 33025.99, worst = 35125.44
+
+### Population 50:
+    - BALANCED: best = 41074.22, avg = 42041.31, worst = 53196.33
+    - EXPLOITATION: best = 23463.23, avg = 23603.09, worst = 24874.5
+    - EXPLORATION: best = 31322.63, avg = 33025.99, worst = 35125.44
+
+### Population 100:
+    - BALANCED: best = 41074.22, avg = 42041.31, worst = 53196.33
+    - EXPLOITATION: best = 23463.23, avg = 23603.09, worst = 24874.5
+    - EXPLORATION: best = 31322.63, avg = 33025.99, worst = 35125.44
+
+### Population 200:
+    - BALANCED: best = 41074.22, avg = 42041.31, worst = 53196.33
+    - EXPLOITATION: best = 23463.23, avg = 23603.09, worst = 24874.5
+    - EXPLORATION: best = 31322.63, avg = 33025.99, worst = 35125.44
+
+## KROD100:
+### Population 20:
+    - BALANCED: best = 48050.78, avg = 51986.38, worst = 54306.02
+    - EXPLOITATION: best = 23104.89, avg = 23104.89, worst = 23104.89
+    - EXPLORATION: best = 31281.45, avg = 31446.56, worst = 32606.63
+
+### Population 50:
+    - BALANCED: best = 48050.78, avg = 51986.38, worst = 54306.02
+    - EXPLOITATION: best = 23104.89, avg = 23104.89, worst = 23104.89
+    - EXPLORATION: best = 31281.45, avg = 31446.56, worst = 32606.63
+
+### Population 100:
+    - BALANCED: best = 48050.78, avg = 51986.38, worst = 54306.02
+    - EXPLOITATION: best = 23104.89, avg = 23104.89, worst = 23104.89
+    - EXPLORATION: best = 31281.45, avg = 31446.56, worst = 32606.63
+
+### Population 200:
+    - BALANCED: best = 48050.78, avg = 51986.38, worst = 54306.02
+    - EXPLOITATION: best = 23104.89, avg = 23104.89, worst = 23104.89
+    - EXPLORATION: best = 31281.45, avg = 31446.56, worst = 32606.63
+
+## LIN105:
+### Population 20:
+    - BALANCED: best = 26866.14, avg = 26866.14, worst = 26866.14
+    - EXPLOITATION: best = 15952.44, avg = 16008.07, worst = 17065.03
+    - EXPLORATION: best = 23421.27, avg = 26597.55, worst = 30273.64
+
+### Population 50:
+    - BALANCED: best = 26866.14, avg = 26866.14, worst = 26866.14
+    - EXPLOITATION: best = 15952.44, avg = 16008.07, worst = 17065.03
+    - EXPLORATION: best = 23421.27, avg = 26597.55, worst = 30273.64
+
+### Population 100:
+    - BALANCED: best = 26866.14, avg = 26866.14, worst = 26866.14
+    - EXPLOITATION: best = 15952.44, avg = 16008.07, worst = 17065.03
+    - EXPLORATION: best = 23421.27, avg = 26597.55, worst = 30273.64
+
+### Population 200:
+    - BALANCED: best = 26866.14, avg = 26866.14, worst = 26866.14
+    - EXPLOITATION: best = 15952.44, avg = 16008.07, worst = 17065.03
+    - EXPLORATION: best = 23421.27, avg = 26597.55, worst = 30273.64
+
+## PCB442:
+### Population 20:
+    - BALANCED: best = 214782.39, avg = 215434.46, worst = 219272.76
+    - EXPLOITATION: best = 143181.11, avg = 143181.11, worst = 143181.11
+    - EXPLORATION: best = 165438.31, avg = 165784.08, worst = 168974.73
+
+### Population 50:
+    - BALANCED: best = 214782.39, avg = 215434.46, worst = 219272.76
+    - EXPLOITATION: best = 143181.11, avg = 143181.11, worst = 143181.11
+    - EXPLORATION: best = 165438.31, avg = 165784.08, worst = 168974.73
+
+### Population 100:
+    - BALANCED: best = 214782.39, avg = 215434.46, worst = 219272.76
+    - EXPLOITATION: best = 143181.11, avg = 143181.11, worst = 143181.11
+    - EXPLORATION: best = 165438.31, avg = 165784.08, worst = 168974.73
+
+### Population 200:
+    - BALANCED: best = 214782.39, avg = 215434.46, worst = 219272.76
+    - EXPLOITATION: best = 143181.11, avg = 143181.11, worst = 143181.11
+    - EXPLORATION: best = 165438.31, avg = 165784.08, worst = 168974.73
+
+## PR2392:
+### Population 20:
+    - BALANCED: best = 5550049.97, avg = 5552251.71, worst = 5594084.69
+    - EXPLOITATION: best = 6785120.79, avg = 6785946.02, worst = 6801625.45
+    - EXPLORATION: best = 6127844.68, avg = 6138220.3, worst = 6155427.68
+
+### Population 50:
+    - BALANCED: best = 5550049.97, avg = 5552251.71, worst = 5594084.69
+    - EXPLOITATION: best = 6785120.79, avg = 6785946.02, worst = 6801625.45
+    - EXPLORATION: best = 6127844.68, avg = 6138220.3, worst = 6155427.68
+
+### Population 100:
+    - BALANCED: best = 5550049.97, avg = 5552251.71, worst = 5594084.69
+    - EXPLOITATION: best = 6785120.79, avg = 6785946.02, worst = 6801625.45
+    - EXPLORATION: best = 6127844.68, avg = 6138220.3, worst = 6155427.68
+
+### Population 200:
+    - BALANCED: best = 5550049.97, avg = 5552251.71, worst = 5594084.69
+    - EXPLOITATION: best = 6785120.79, avg = 6785946.02, worst = 6801625.45
+    - EXPLORATION: best = 6127844.68, avg = 6138220.3, worst = 6155427.68
+
+## USA13509:
+### Population 20:
+    - BALANCED: best = 1347016817.49, avg = 1347093019.43, worst = 1347894442.1
+    - EXPLOITATION: best = 1271341588.56, avg = 1271341588.56, worst = 1271341588.56
+    - EXPLORATION: best = 1447935504.69, avg = 1448564319.8, worst = 1453294054.43
+
+### Population 50:
+    - BALANCED: best = 1347016817.49, avg = 1347093019.43, worst = 1347894442.1
+    - EXPLOITATION: best = 1271341588.56, avg = 1271341588.56, worst = 1271341588.56
+    - EXPLORATION: best = 1447935504.69, avg = 1448564319.8, worst = 1453294054.43
+
+### Population 100:
+    - BALANCED: best = 1347016817.49, avg = 1347093019.43, worst = 1347894442.1
+    - EXPLOITATION: best = 1271341588.56, avg = 1271341588.56, worst = 1271341588.56
+    - EXPLORATION: best = 1447935504.69, avg = 1448564319.8, worst = 1453294054.43
+
+### Population 200:
+    - BALANCED: best = 1347016817.49, avg = 1347093019.43, worst = 1347894442.1
+    - EXPLOITATION: best = 1271341588.56, avg = 1271341588.56, worst = 1271341588.56
+    - EXPLORATION: best = 1447935504.69, avg = 1448564319.8, worst = 1453294054.43
