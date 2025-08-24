@@ -195,3 +195,84 @@ class Crossover:
             cycle_num += 1
 
         return child_1, child_2
+
+    def edge_recombination_crossover(self, parent_1, parent_2):
+        """Edge Recombination Crossover (ERX).
+        
+        Preserves adjacency information from both parents by building
+        an edge table and constructing offspring using shared edges.
+        
+        Inputs:
+            parent_1, parent_2 (list): equal-length permutations.
+        Returns:
+            (child_1, child_2): offspring that preserve edge information
+            from both parents.
+        """
+        size = len(parent_1)
+        
+        def build_edge_table(p1, p2):
+            """Build adjacency table from both parents."""
+            edge_table = {}
+            
+            for i in range(size):
+                city = p1[i]
+                if city not in edge_table:
+                    edge_table[city] = set()
+                
+                # Add neighbors from parent 1
+                prev_city = p1[(i - 1) % size]
+                next_city = p1[(i + 1) % size]
+                edge_table[city].add(prev_city)
+                edge_table[city].add(next_city)
+                
+                # Add neighbors from parent 2
+                p2_index = p2.index(city)
+                prev_city = p2[(p2_index - 1) % size]
+                next_city = p2[(p2_index + 1) % size]
+                edge_table[city].add(prev_city)
+                edge_table[city].add(next_city)
+            
+            return edge_table
+        
+        def construct_offspring(edge_table):
+            """Construct offspring using edge table."""
+            offspring = []
+            remaining = set(parent_1)
+            edge_table_copy = {city: neighbors.copy() for city, neighbors in edge_table.items()}
+            
+            # Start with random city
+            current = random.choice(list(remaining))
+            offspring.append(current)
+            remaining.remove(current)
+            
+            while remaining:
+                # Remove current city from all edge lists
+                for city in edge_table_copy:
+                    edge_table_copy[city].discard(current)
+                
+                # Find next city
+                candidates = edge_table_copy[current] & remaining
+                
+                if candidates:
+                    # Choose city with fewest connections (tie-breaking randomly)
+                    min_connections = min(len(edge_table_copy[city] & remaining) for city in candidates)
+                    best_candidates = [city for city in candidates 
+                                     if len(edge_table_copy[city] & remaining) == min_connections]
+                    current = random.choice(best_candidates)
+                else:
+                    # No connected cities available, choose randomly
+                    current = random.choice(list(remaining))
+                
+                offspring.append(current)
+                remaining.remove(current)
+            
+            return offspring
+        
+        # Build edge table
+        edge_table = build_edge_table(parent_1, parent_2)
+        
+        # Construct two offspring
+        child_1 = construct_offspring(edge_table)
+        child_2 = construct_offspring(edge_table)
+        
+        return child_1, child_2
