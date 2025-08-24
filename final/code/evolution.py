@@ -22,7 +22,6 @@ import csv
 import os
 import sys
 from typing import List, Tuple, Optional
-from multiprocessing import shared_memory
 import numpy as np
 
 from tsp import TSP
@@ -278,8 +277,7 @@ class EvolutionaryAlgorithm:
         # Evaluate new population
         self.evaluate_population()
 
-    def run_evolution(self, shm_name: str, shape, dtype,
-                     generations: int, 
+    def run_evolution(self, generations: int, 
                      selection_method: str = 'tournament',
                      crossover_method: str = 'order', 
                      mutation_method: str = 'swap',

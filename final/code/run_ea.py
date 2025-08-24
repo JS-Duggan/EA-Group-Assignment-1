@@ -1,3 +1,14 @@
+"""
+For running the exploitation EA over 30 iterations.
+The code runs the iterations in parallel to make better use of the
+computer's resources and significantly speed up the run time.
+
+To run in terminal:
+    python final/code/run_ea.py tsp_instance population_size generations iterations
+        e.g.,: python final/code/run_ea.py eil51 50 20000 30
+"""
+
+
 import multiprocessing
 from multiprocessing import Pool
 from multiprocessing import shared_memory
@@ -46,12 +57,13 @@ def main():
     runs_per_worker = iterations // num_workers
     extra_runs = iterations % num_workers
     
+    # Create distance matrix
     data = loadTSP(path)
     graph = data.get_distance_matrix()
     
     dimension = data.get_dimension()
     
-    # Create shared memory
+    # Create shared memory for distance matrix
     shm = shared_memory.SharedMemory(create=True, size=graph.nbytes)
     shared_graph = np.ndarray(graph.shape, dtype=graph.dtype, buffer=shm.buf)
     shared_graph[:] = graph[:]  # copy data
@@ -78,13 +90,13 @@ def main():
     for i in range(len(results)):
         for j in range(len(results[i])):
             res.append(results[i][j][1])
-        
-    
     
     mean = np.mean(res)
     std = np.std(res)
     
     print(f"Runs: {len(res)}")
+    
+    # Output the mean and standard deviation of the results over the n iterations
     print(f"- mean = {mean}")
     print(f"- std = {std}")
     

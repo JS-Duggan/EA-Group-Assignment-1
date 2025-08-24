@@ -14,13 +14,19 @@ The data is collated into a csv file under `final/code/saves` as a raw set of da
 # Exercise 3-6
 
 
+Running the best performing EA (exploitation) 30 times on each TSP instance:
+  To run the exploitation algorithm 30 times, run `run_ea.py`.
+  To run it in terminal (make sure you are in project root directory):
+      `python final/code/run_ea.py tsp_instance population_size generations iterations`
+          e.g.,: `python final/code/run_ea.py eil51 50 20000 30`
+
 # Exercise 7
 
 This aglorithm looks to impliment the Inver-Over Algorithm. 
 
-To run the code:
-
-`final/code/run_inverover.py`
+To run the cod with default arguments (make sure you are in final/code using `cd final/code`):
+  `python run_inverover.py --instances_glob tsp_path`
+      e.g.,: `python run_inverover.py --instances_glob test_cases/eil51.tsp`
 
 Arguments
 - `--runs` 
