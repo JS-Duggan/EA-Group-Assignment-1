@@ -2,8 +2,8 @@ from __future__ import annotations
 import random
 from typing import List, Tuple, Optional
 import numpy as np
-
-from load_tsp import loadTSP
+import time
+from multiprocessing import shared_memory
 
 def tour_cost(graph: np.ndarray, tour: List[int]) -> float:
     """Compute cyclic tour cost."""
@@ -89,21 +89,24 @@ class InverOverEA:
         cost = parent_cost
 
         # pick current city c
-        c = random.choice(child)
+        # c = random.choice(child)
+        c = child[np.random.randint(self.pop_size)]
         i = pos[c]
 
         while True:
             # choose c0
-            if random.random() <= self.p:
+            if np.random.random() <= self.p:
                 # random c0 != c
                 # uniformly pick an index != i
                 j_idx = i
                 while j_idx == i:
-                    j_idx = random.randrange(n)
+                    # j_idx = random.randrange(n)
+                    j_idx = np.random.randint(n)
                 c0 = child[j_idx]
             else:
                 # guided by random mate: successor of c in that mate
-                k = random.randrange(self.pop_size)
+                # k = random.randrange(self.pop_size)
+                k = np.random.randint(self.pop_size)
                 mate = population[k]
                 mate_pos = pop_pos[k]
                 j_in_mate = mate_pos[c]               # O(1)
@@ -146,6 +149,7 @@ class InverOverEA:
         best = pop[best_idx][:]
         best_cost = costs[best_idx]
 
+        timer = time.perf_counter()
         for gen in range(1, self.generations + 1):
             for i in range(self.pop_size):
                 parent = pop[i]
@@ -164,16 +168,20 @@ class InverOverEA:
                         best_cost = child_cost
                         best = child[:]
 
-            if self.progress_every and (gen % self.progress_every == 0):
-                print(f"[inver-over] gen {gen}/{self.generations} best={best_cost:.2f}", flush=True)
+            if self.progress_every and (gen % self.progress_every == 0):                
+                time_taken = time.perf_counter() - timer
+                timer = time.perf_counter()
+                print(f"[inver-over] gen {gen}/{self.generations} best={best_cost:.2f} time={time_taken:.2f}", flush=True)
 
         return best, float(best_cost)
 
-def run_on_instance(path: str, runs: int = 30, population_size: int = 50, generations: int = 20000,
+def run_on_instance(shm_name: str, shape, dtype, runs: int = 30, population_size: int = 50, generations: int = 20000,
                     p_random: float = 0.02, seed: Optional[int] = None, progress_every: int = 0) -> Tuple[float, float]:
     """Load TSPLIB via your loader, run Inver-over `runs` times, return (mean, stddev)."""
-    data = loadTSP(path)
-    graph = data.get_distance_matrix()
+    
+    # Set reference to graph in shared memory
+    existing_shm = shared_memory.SharedMemory(name=shm_name)
+    graph = np.ndarray(shape, dtype=dtype, buffer=existing_shm.buf)
 
     costs: List[float] = []
     base_seed = seed if seed is not None else int(random.random() * 1e9)
@@ -183,7 +191,7 @@ def run_on_instance(path: str, runs: int = 30, population_size: int = 50, genera
                          population_size=population_size,
                          generations=generations,
                          seed=base_seed + r * 9973,
-                         progress_every=generations // 10 if generations >= 10 else 0)
+                         progress_every=progress_every)
         _, cost = ea.run()
         costs.append(cost)
 
