@@ -1,4 +1,3 @@
 # Inver-over EA results (mean, stddev over runs)
 # runs=30, pop=50, gens=20000, p_random=0.02
 instance,mean_cost,stddev
-lin105.tsp,14392.701843,11.207794

@@ -46,7 +46,6 @@ def main():
         f.write("instance,mean_cost,stddev\n")
         
         all_tasks = []
-        task_path = []
         for p in files:
             # Load graph once
             data = loadTSP(p)
@@ -63,19 +62,18 @@ def main():
             for i in range(num_workers):
                 runs = runs_per_worker + (1 if i < extra_runs else 0)
                 if runs > 0:
-                    all_tasks.append((shm.name, shared_graph.shape, shared_graph.dtype, runs, args.pop, args.gens, args.p_random, args.seed, 2000))
-                    task_path.append(p)
+                    all_tasks.append((shm.name, shared_graph.shape, shared_graph.dtype, runs, args.pop, args.gens, args.p_random, args.seed, 50))
         
         with Pool(processes=num_workers) as pool:
             partial_results = pool.map(wrapper, all_tasks)
             
-        # print(partial_results)
-            
         results_per_instance = defaultdict(list)
         # Collect results by instance
-        for (mean, std), path in zip(partial_results, task_path):
-            results_per_instance[path].append(mean)
-        
+        for (mean, std), task in zip(partial_results, all_tasks):
+            p = task[0]
+            results_per_instance[p].append(mean)
+
+            
         for p in files:
             means = results_per_instance[p]
             mean_final = np.mean(means)
