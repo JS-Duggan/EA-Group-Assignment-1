@@ -13,6 +13,7 @@ Allocations Exersise 1 & 2
 - Implement exchange switching: Jack
 - Implement inverse switching: Liam
 - Integrate localSearch to file saving: Cooper
+
 - Optimisation: Liam + Jack
 - Testing: Liam
 - Data collection: Liam
