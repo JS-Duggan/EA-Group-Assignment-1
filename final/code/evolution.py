@@ -425,10 +425,10 @@ class EvolutionaryAlgorithm:
                 elitism_count=2
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
@@ -471,11 +471,11 @@ class EvolutionaryAlgorithm:
                 elitism_count=1      # Less elitism for more exploration
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
                 diversity = self.get_population_diversity()
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Diversity={diversity:.2f}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Diversity={diversity:.2f}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
@@ -521,10 +521,10 @@ class EvolutionaryAlgorithm:
                 elitism_count=elite_count
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Elites={elite_count}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Elites={elite_count}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
