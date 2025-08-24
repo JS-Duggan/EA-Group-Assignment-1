@@ -20,7 +20,7 @@ This aglorithm looks to impliment the Inver-Over Algorithm.
 
 To run the code:
 
-`final/code/run_inverover.py`
+`python final/code/run_inverover.py`
 
 Arguments
 - `--runs` 

@@ -75,19 +75,25 @@ class EvolutionaryAlgorithm:
             'insert': self._mutation_jump  # Alias for jump (same operation)
         }
 
-    def initialize_population(self) -> None:
-        """Initialize the population with random individuals."""
+    def initializePopulation(self) -> None:
+        """
+        Initialize the population with random individuals.
+        """
+
         self.population = []
         for _ in range(self.population_size):
-            individual = self.tsp.generate_random_path(self.tsp.dimension)
+            individual = self.tsp.generateRandomPath(self.tsp.dimension)
             self.population.append(individual)
         
         # Evaluate initial population
-        self.evaluate_population()
+        self.evaluatePopulation()
         print(f"Population initialized with {self.population_size} individuals")
 
-    def evaluate_population(self) -> None:
-        """Evaluate fitness for all individuals in the population."""
+    def evaluatePopulation(self) -> None:
+        """
+        Evaluate fitness for all individuals in the population.
+        """
+
         self.fitness_scores = []
         for individual in self.population:
             fitness = self.tsp.permutationCost(individual)
@@ -98,14 +104,14 @@ class EvolutionaryAlgorithm:
                 self.best_fitness = fitness
                 self.best_individual = individual.copy()
 
-    def tournament_selection(self, tournament_size: int = 3) -> List[int]:
+    def tournamentSelection(self, tournament_size: int = 3) -> List[int]:
         """
         Tournament selection operator using selection.py.
         
-        Args:
+        Inputs:
             tournament_size: Number of individuals in tournament
             
-        Returns:
+        Outputs:
             Selected individual (tour)
         """
         # Convert fitness to maximization (lower cost = higher fitness)
@@ -121,11 +127,11 @@ class EvolutionaryAlgorithm:
         selected = self.selection.tournament(contestants, contestant_fitness, k=tournament_size, p=1.0)
         return selected[0].copy()
 
-    def roulette_wheel_selection(self) -> List[int]:
+    def rouletteWheelSelection(self) -> List[int]:
         """
         Roulette wheel selection operator using selection.py.
         
-        Returns:
+        Outputs:
             Selected individual (tour)
         """
         # Convert fitness to maximization (lower cost = higher fitness)
@@ -135,7 +141,7 @@ class EvolutionaryAlgorithm:
         # Use the fitness_proportional method from selection.py
         # It expects to select a full population, so we select one and take the first
         temp_population = [self.population[i] for i in range(len(self.population))]
-        selected_population = self.selection.fitness_proportional(temp_population, maximized_fitness)
+        selected_population = self.selection.fitnessProportional(temp_population, maximized_fitness)
         
         # Return a random individual from the selected population (since we only need one)
         return random.choice(selected_population).copy()
@@ -144,11 +150,11 @@ class EvolutionaryAlgorithm:
         """
         Swap mutation operator using permutation.py methods.
         
-        Args:
+        Inputs:
             individual: Tour to mutate
             mutation_rate: Probability of mutation
             
-        Returns:
+        Outputs:
             Mutated individual
         """
         if random.random() < mutation_rate:
@@ -157,15 +163,15 @@ class EvolutionaryAlgorithm:
             individual = self.tsp.swap_pair(individual.copy(), i, j)
         return individual
 
-    def _mutation_inversion(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
+    def _mutationInversion(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
         """
         Inversion mutation operator using permutation.py methods.
         
-        Args:
+        Inputs:
             individual: Tour to mutate
             mutation_rate: Probability of mutation
             
-        Returns:
+        Outputs:
             Mutated individual
         """
         if random.random() < mutation_rate:
@@ -174,15 +180,15 @@ class EvolutionaryAlgorithm:
             individual = self.tsp.inversion_pair(individual, i, j)
         return individual
 
-    def _mutation_jump(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
+    def _mutationJump(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
         """
         Jump mutation operator using permutation.py methods.
         
-        Args:
+        Inputs:
             individual: Tour to mutate
             mutation_rate: Probability of mutation
             
-        Returns:
+        Outputs:
             Mutated individual
         """
         if random.random() < mutation_rate:
@@ -191,15 +197,15 @@ class EvolutionaryAlgorithm:
             individual = self.tsp.jump_pair(individual.copy(), i, j)
         return individual
 
-    def _validate_individual(self, individual: List[int], fallback_parent: List[int]) -> List[int]:
+    def _validateIndividual(self, individual: List[int], fallback_parent: List[int]) -> List[int]:
         """
         Validate and fix an individual by filling any None values.
         
-        Args:
+        Inputs:
             individual: Individual to validate
             fallback_parent: Parent to use for missing values
             
-        Returns:
+        Outputs:
             Validated individual with no None values
         """
         if individual is None:
@@ -224,7 +230,7 @@ class EvolutionaryAlgorithm:
         
         return validated_individual
 
-    def evolve_generation(self, selection_method: str = 'tournament', 
+    def evolveGeneration(self, selection_method: str = 'tournament', 
                          crossover_method: str = 'order',
                          mutation_method: str = 'swap',
                          mutation_rate: float = 0.1,
@@ -232,7 +238,7 @@ class EvolutionaryAlgorithm:
         """
         Evolve one generation of the population.
         
-        Args:
+        Outputs:
             selection_method: Selection operator to use
             crossover_method: Crossover operator to use
             mutation_method: Mutation operator to use
@@ -276,7 +282,7 @@ class EvolutionaryAlgorithm:
         # Evaluate new population
         self.evaluate_population()
 
-    def run_evolution(self, generations: int, 
+    def runEvolution(self, generations: int, 
                      selection_method: str = 'tournament',
                      crossover_method: str = 'order', 
                      mutation_method: str = 'swap',
@@ -286,7 +292,7 @@ class EvolutionaryAlgorithm:
         """
         Run the evolutionary algorithm for specified generations.
         
-        Args:
+        Inputs:
             generations: Number of generations to evolve
             selection_method: Selection operator ('tournament' or 'roulette')
             crossover_method: Crossover operator ('order', 'pmx', or 'cycle')
@@ -295,7 +301,7 @@ class EvolutionaryAlgorithm:
             elitism_count: Number of elite individuals to preserve
             verbose: Whether to print progress information
             
-        Returns:
+        Outputs:
             Tuple of (best_tour, best_fitness)
         """
         print(f"Starting evolution with {generations} generations...")
@@ -338,11 +344,11 @@ class EvolutionaryAlgorithm:
         
         return self.best_individual, self.best_fitness
 
-    def save_results(self, save_path: str) -> None:
+    def saveResults(self, save_path: str) -> None:
         """
         Save evolution results to a CSV file.
         
-        Args:
+        Inputs:
             save_path: Path to save the results
         """
         # Ensure the directory exists
@@ -368,11 +374,11 @@ class EvolutionaryAlgorithm:
         
         print(f"Results saved to: {save_path}")
 
-    def get_population_diversity(self) -> float:
+    def getPopulationDiversity(self) -> float:
         """
         Calculate population diversity as average pairwise distance.
         
-        Returns:
+        Outputs:
             Average diversity score
         """
         if len(self.population) < 2:
@@ -399,12 +405,12 @@ class EvolutionaryAlgorithm:
         - Crossover: Partially Mapped Crossover (PMX)
         - Mutation: Swap mutation
         
-        Args:
+        Inputs:
             population: Initial population
             num_generations: Number of generations to evolve
             tsp_object: TSP problem instance with graph and mutation operators
             
-        Returns:
+        Outputs:
             Tuple of (final_population, best_cost)
         """
         # Use the provided TSP object
@@ -445,12 +451,12 @@ class EvolutionaryAlgorithm:
         - Crossover: Cycle crossover
         - Mutation: Insert mutation
         
-        Args:
+        Inputs:
             population: Initial population
             num_generations: Number of generations to evolve
             tsp_object: TSP problem instance with graph and mutation operators
             
-        Returns:
+        Outputs:
             Tuple of (final_population, best_cost)
         """
         # Use the provided TSP object
@@ -492,19 +498,19 @@ class EvolutionaryAlgorithm:
         - Crossover: Edge Recombination Crossover (ERX)
         - Mutation: Inversion mutation
         
-        Args:
+        Inputs:
             population: Initial population
             num_generations: Number of generations to evolve
             tsp_object: TSP problem instance with graph and mutation operators
             
-        Returns:
+        Outputs:
             Tuple of (final_population, best_cost)
         """
         # Use the provided TSP object
         self.tsp = tsp_object
         self.population = [ind.copy() for ind in population]
         self.population_size = len(population)
-        self.evaluate_population()
+        self.evaluatePopulation()
         
         print(f"Running EXPLOITATION algorithm for {num_generations} generations...")
         print("Configuration: Elitism + Tournament selection + ERX crossover + Inversion mutation")
@@ -513,7 +519,7 @@ class EvolutionaryAlgorithm:
         elite_count = max(2, int(0.07 * self.population_size))  # 7% elitism
         
         for generation in range(num_generations):
-            self.evolve_generation(
+            self.evolveGeneration(
                 selection_method='tournament',
                 crossover_method='erx',
                 mutation_method='inversion',
@@ -534,7 +540,10 @@ class EvolutionaryAlgorithm:
 
 
 def main():
-    """Main function to run the evolutionary algorithm."""
+    """
+    Main function to run the evolutionary algorithm.
+    """
+
     parser = argparse.ArgumentParser(description='Evolutionary Algorithm for TSP')
     parser.add_argument('generations', type=int, help='Number of generations to run')
     parser.add_argument('tsp_file', type=str, help='Path to TSP problem file')

@@ -10,8 +10,11 @@ import subprocess
 import sys
 import os
 
-def run_evolution(generations, tsp_file, **kwargs):
-    """Run the evolution script with given parameters."""
+def runEvolution(generations, tsp_file, **kwargs):
+    """
+    Run the evolution script with given parameters.
+    """
+
     cmd = [sys.executable, "evolution.py", str(generations), tsp_file]
     
     for key, value in kwargs.items():
@@ -27,7 +30,10 @@ def run_evolution(generations, tsp_file, **kwargs):
     return result.returncode == 0
 
 def main():
-    """Run demonstration examples."""
+    """
+    Run demonstration examples.
+    """
+
     print("Evolutionary Algorithm Demonstration")
     print("=" * 50)
     
@@ -45,21 +51,21 @@ def main():
     
     # Example 1: Basic run with default parameters
     print("Example 1: Basic run (10 generations, default parameters)")
-    run_evolution(10, test_file, seed=42)
+    runEvolution(10, test_file, seed=42)
     
     # Example 2: Tournament selection with PMX crossover
     print("Example 2: Tournament selection with PMX crossover")
-    run_evolution(15, test_file, selection="tournament", crossover="pmx", 
+    runEvolution(15, test_file, selection="tournament", crossover="pmx", 
                  mutation="swap", mutation_rate=0.15, seed=123)
     
     # Example 3: Roulette wheel selection with cycle crossover
     print("Example 3: Roulette wheel selection with cycle crossover")
-    run_evolution(12, test_file, selection="roulette", crossover="cycle", 
+    runEvolution(12, test_file, selection="roulette", crossover="cycle", 
                  mutation="inversion", mutation_rate=0.2, elitism=3, seed=456)
     
     # Example 4: High mutation rate with jump mutation
     print("Example 4: High mutation rate with jump mutation")
-    run_evolution(8, test_file, selection="tournament", crossover="order", 
+    runEvolution(8, test_file, selection="tournament", crossover="order", 
                  mutation="jump", mutation_rate=0.3, elitism=1, seed=789)
     
     print("Demonstration completed!")
