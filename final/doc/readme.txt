@@ -28,11 +28,11 @@ To run the code:
   This will run all three algorithms with a population size of 20, and will save metrics for generations 2000, 5000, 10,000, and 20,000
   Results are saved to CSV files in `final/code/saves/` with detailed performance metrics including cost, runtime, improvement, and population diversity.
 
-Running the best performing EA (exploitation) 30 times on each TSP instance:
-  To run the exploitation algorithm 30 times, run `run_ea.py`.
-  To run it in terminal (make sure you are in project root directory):
-      `python final/code/run_ea.py tsp_instance population_size generations iterations`
-          e.g.,: `python final/code/run_ea.py eil51 50 20000 30`
+3. Running the best performing EA (exploitation) 30 times on each TSP instance:
+    To run the exploitation algorithm 30 times, run `run_ea.py`.
+    To run it in terminal (make sure you are in project root directory):
+        `python final/code/run_ea.py tsp_instance population_size generations iterations`
+            e.g.,: `python final/code/run_ea.py eil51 50 20000 30`
 
 # Exercise 7
 
