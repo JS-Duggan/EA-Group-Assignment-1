@@ -6,6 +6,24 @@ Members:
 - Whitbread, Cooper (a1851470)
 - Zhu, Zhenshu (a1933054)
 
+# Individual Contributions
+Liam:
+
+Mohon:
+
+Jack:
+
+Jayom:
+
+Cooper:
+Setup the initial integration of localSearch for Exercise 2, and setup file saving and data processing to collate results to. 
+Extracted the mutation content from the tsp problem to for Exercise 4. 
+Went through and fixed up the general documentation for the entire project. 
+
+Zhenshu:
+
+# Contributions by exercise
+
 Allocations Exersise 1 & 2
 - Load in tsp data and process travel costs: Zhenshu
 - Generate initial path: Jayom

@@ -3,12 +3,31 @@ from crossover import Crossover
 from tsp import TSP
 
 class Individual(Permutation):
+    """
+    A class that represents a single permutation of the TSP
+
+    Individuals inherit the mutation opperators from the Permutation class and have cross over algorithms avaiable through the Crossover object
+    """
+
     crossover: Crossover
+
     def __init__(self, tsp: TSP):
-        num_nodes = tsp.dimension
-        self.path = tsp.generate_random_path(num_nodes)
+        """
+        Setup the initial randomly generated path
+
+        Inputs:
+            tsp (TSP): an instance of the TSP for generating a random path
+        """
         
-    def get_path(self):
+        self.path = tsp.generateRandomPath(tsp.dimension)
+        
+    def getPath(self):
+        """
+        Returns the path of the individual
+
+        Outputs:
+            path (list[int]): the permutation of the TSP representing this individual
+        """
         return self.path
  
     
