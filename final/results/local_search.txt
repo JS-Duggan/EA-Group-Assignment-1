@@ -203,7 +203,7 @@ USA13509:
 the running average improvement of tour cost slowed from a
 proportion of >1e-5 over 500 iterations to <1e-5. This was 
 necessary otherwise the algorithms would take too long to run
-30 iterations)
+30 times)
     Jump: 
         - mean = 70490097.63333334
         - median = 70469314.0
