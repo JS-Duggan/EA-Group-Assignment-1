@@ -13,3 +13,10 @@ Allocations Exersise 1 & 2
 - Implement exchange switching: Jack
 - Implement inverse switching: Liam
 - Integrate localSearch to file saving: Cooper
+
+- Excercise 3: Jayom
+- Exercise 5: Mohon
+- Clearing up Exercise 1 and 2: Liam
+- Exercise 4 (mutation): Cooper
+- Exercise 4 (crossover): Jack
+- Exercise 7: George
