@@ -4,13 +4,27 @@ from multiprocessing import shared_memory
 import numpy as np
 import argparse
 
+from tsp import TSP
 from load_tsp import loadTSP
-
-from inverover import run_on_instance
+from evolution import EvolutionaryAlgorithm
 
 # Each parallel process runs
 def wrapper(args):
-    return evolution(*args) # EA function
+    shm_name, shape, dtype, runs, population, generations, dimension, path = args
+    
+    tsp = TSP(path, "dummy_save.csv", dimension, False)
+    tsp.load_shared_memory(shm_name, shape, dtype)
+    
+    ea = EvolutionaryAlgorithm(tsp, population)
+    
+    ea.initialize_population()
+    population = ea.population
+    
+    results = []
+    for i in range(runs):
+        results.append(ea.exploitation(population, generations, tsp)) # EA function
+        
+    return results
 
 def main():
     parser = argparse.ArgumentParser()
@@ -34,6 +48,8 @@ def main():
     data = loadTSP(path)
     graph = data.get_distance_matrix()
     
+    dimension = data.get_dimension()
+    
     # Create shared memory
     shm = shared_memory.SharedMemory(create=True, size=graph.nbytes)
     shared_graph = np.ndarray(graph.shape, dtype=graph.dtype, buffer=shm.buf)
@@ -46,31 +62,35 @@ def main():
     for i in range(num_workers):
         runs = runs_per_worker + (1 if i < extra_runs else 0)
         if runs > 0:
-            all_tasks.append((shm.name, shared_graph.shape, shared_graph.dtype, runs, population, generations))
-    
+            all_tasks.append((shm.name, shared_graph.shape, shared_graph.dtype,
+                              runs,
+                              population,
+                              generations,
+                              dimension,
+                              path
+            ))
     
     with Pool(processes=num_workers) as pool:
         results = pool.map(wrapper, all_tasks)
-
-    print(results)
     
     res = []
     for i in range(len(results)):
-        res.append(results[i][0])
+        for j in range(len(results[i])):
+            res.append(results[i][j][1])
         
     
     
     mean = np.mean(res)
     std = np.std(res)
     
-    print(f"mean: {mean}")
-    print(f"std: {std}")
+    print(f"Runs: {len(res)}")
+    print(f"- mean: {mean}")
+    print(f"- std: {std}")
     
     
     # Cleanup
     shm.close()
     shm.unlink()
 
-# Need this for it to work
 if __name__ == "__main__":
     main()
