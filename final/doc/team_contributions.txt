@@ -23,9 +23,10 @@ Allocations Exersise 3 - 6
 - Exersise 4 - Mutation: Cooper
 - Exersise 4 - Cross Over: Jack
 - Exersise 5: Mohon
+- Component integration: Jack
 - General testing: Liam
 - Optimisation: Liam
-- Data collection: Liam
+- Data collection: Liam / Jack
 
 Allocations Exersise 7
 - Inver-over code: Zhenshu

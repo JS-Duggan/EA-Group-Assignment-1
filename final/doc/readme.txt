@@ -13,6 +13,20 @@ The data is collated into a csv file under `final/code/saves` as a raw set of da
 
 # Exercise 3-6
 
+To run the code:
+
+1. Install dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the comprehensive evolution comparison:
+   ```bash
+   python final/code/run_evolutions.py {test_case}
+   ```
+
+  This will run all three algorithms with a population size of 20, and will save metrics for generations 2000, 5000, 10,000, and 20,000
+  Results are saved to CSV files in `final/code/saves/` with detailed performance metrics including cost, runtime, improvement, and population diversity.
 
 # Exercise 7
 
