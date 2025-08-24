@@ -44,26 +44,6 @@ def main():
         f.write("# Inver-over EA results (mean, stddev over runs)\n")
         f.write(f"# runs={args.runs}, pop={args.pop}, gens={args.gens}, p_random={args.p_random}\n")
         f.write("instance,mean_cost,stddev\n")
-        # for p in files:
-        #     name = Path(p).name
-        #     print(f"=== {name}: runs={args.runs}, pop={args.pop}, gens={args.gens}, p={args.p_random} ===", flush=True)
-        #     t0 = time.time()
-        #     # mean, std = run_on_instance(
-        #     #     p, runs=args.runs, population_size=args.pop,
-        #     #     generations=args.gens, p_random=args.p_random,
-        #     #     seed=args.seed, progress_every=max(args.gens // 10, 1)
-        #     # )
-        #     mean, std = run_on_instance(
-        #         p, runs=args.runs, population_size=args.pop,
-        #         generations=args.gens, p_random=args.p_random,
-        #         seed=args.seed, progress_every=50
-        #     )
-        #     dt = time.time() - t0
-        #     f.write(f"{name},{mean:.6f},{std:.6f}\n")
-        #     f.flush()
-        #     print(f"[DONE] {name}: mean={mean:.2f} std={std:.2f} ({dt:.1f}s)", flush=True)
-        
-        
         
         all_tasks = []
         for p in files:
