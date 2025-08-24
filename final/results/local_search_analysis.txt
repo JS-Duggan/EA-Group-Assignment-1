@@ -1,3 +1,8 @@
-Summarize and compare in the file results/local_search_analysis.txt the results
-using at most 150 words.
-
+The inversion algorithm consistently produced the smallest minimum cost tour across all TSP cases except for 
+EIL76 – for which jump produced the smallest minimum tour. The inversion algorithm also produced the smallest 
+cost averages across all TSP instances, while the exchange algorithm produced the highest mean tour cost for all 
+instances. The difference between the exchange and inversion mean tour costs grew wider as the dimension of the 
+TSP problem increased; for EIL51, the difference was 122.7 between the algorithms, while for USA13509 there was a 
+large, significant difference of 205845919, demonstrating the importance of efficiency for large TSP instances. 
+The inversion operation allowed the algorithm to keep large chunks of the tour that were efficient, as it is 
+minimally disruptive to relative order.
