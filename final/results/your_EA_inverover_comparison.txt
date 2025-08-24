@@ -1,0 +1,3 @@
+Compare the results with your best results for Exercise 6. Summarize your comparison in a
+file results/your_EA_inverover_comparison.txt. Use at most 100 words for this comparison.
+
