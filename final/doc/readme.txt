@@ -24,7 +24,7 @@ Running the best performing EA (exploitation) 30 times on each TSP instance:
 
 This aglorithm looks to impliment the Inver-Over Algorithm. 
 
-To run the cod with default arguments (make sure you are in final/code using `cd final/code`):
+To run the code with default arguments (make sure you are in final/code using `cd final/code`):
   `python run_inverover.py --instances_glob tsp_path`
       e.g.,: `python run_inverover.py --instances_glob test_cases/eil51.tsp`
 
