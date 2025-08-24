@@ -38,7 +38,7 @@ class Permutation:
         n = len(perm)
         cost = 0
         for i in range(n):
-            cost += self.graph[perm[i], perm[(i + 1) % n]]
+            cost += self.graph[int(perm[i]), int(perm[(i + 1) % n])]
         return cost
     
     def randomPair(self, n):
@@ -79,7 +79,7 @@ class Permutation:
 
         # Distance lookup helper
         def dist(x, y):
-            return self.graph[x, y]
+            return self.graph[int(x), int(y)]
 
         # Neighbors of i and j
         a, b, c = perm[(i - 1) % n], perm[i], perm[(i + 1) % n]
@@ -135,12 +135,12 @@ class Permutation:
             return cost
         
         # Remove edges
-        cost -= self.graph[perm[(i - 1) % n], perm[i]]
-        cost -= self.graph[perm[j], perm[(j + 1) % n]]
+        cost -= self.graph[int(perm[(i - 1) % n]), int(perm[i])]
+        cost -= self.graph[int(perm[j]), int(perm[(j + 1) % n])]
         
         # Add edges
-        cost += self.graph[perm[(i - 1) % n], perm[j]]
-        cost += self.graph[perm[i], perm[(j + 1) % n]]
+        cost += self.graph[int(perm[(i - 1) % n]), int(perm[j])]
+        cost += self.graph[int(perm[i]), int(perm[(j + 1) % n])]
             
         return cost
     
@@ -187,24 +187,24 @@ class Permutation:
         
         if i < j:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n], perm[i]]
-            cost -= self.graph[perm[i], perm[(i + 1) % n]]
-            cost -= self.graph[perm[j], perm[(j + 1) % n]]
+            cost -= self.graph[int(perm[(i - 1) % n]), int(perm[i])]
+            cost -= self.graph[int(perm[i]), int(perm[(i + 1) % n])]
+            cost -= self.graph[int(perm[j]), int(perm[(j + 1) % n])]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
-            cost += self.graph[perm[i], perm[(j + 1) % n]]
-            cost += self.graph[perm[j], perm[i]]
+            cost += self.graph[int(perm[(i - 1) % n]), int(perm[(i + 1) % n])]
+            cost += self.graph[int(perm[i]), int(perm[(j + 1) % n])]
+            cost += self.graph[int(perm[j]), int(perm[i])]
         else:
             # Remove edges
-            cost -= self.graph[perm[(i - 1) % n], perm[i]]
-            cost -= self.graph[perm[i], perm[(i + 1) % n]]
-            cost -= self.graph[perm[(j - 1) % n], perm[j]]
+            cost -= self.graph[int(perm[(i - 1) % n]), int(perm[i])]
+            cost -= self.graph[int(perm[i]), int(perm[(i + 1) % n])]
+            cost -= self.graph[int(perm[(j - 1) % n]), int(perm[j])]
             
             # Add edges
-            cost += self.graph[perm[(i - 1) % n], perm[(i + 1) % n]]
-            cost += self.graph[perm[(j - 1) % n], perm[i]]
-            cost += self.graph[perm[i], perm[j]]
+            cost += self.graph[int(perm[(i - 1) % n]), int(perm[(i + 1) % n])]
+            cost += self.graph[int(perm[(j - 1) % n]), int(perm[i])]
+            cost += self.graph[int(perm[i]), int(perm[j])]
             
         return cost
     
