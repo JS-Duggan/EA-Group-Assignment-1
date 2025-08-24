@@ -16,7 +16,7 @@ import numpy as np
 import argparse
 
 from tsp import TSP
-from load_tsp import loadTSP
+from load_tsp import LoadTSP
 from evolution import EvolutionaryAlgorithm
 
 # Each parallel process runs
@@ -69,7 +69,7 @@ def main():
     extra_runs = iterations % num_workers
     
     # Create distance matrix
-    data = loadTSP(path)
+    data = LoadTSP(path)
     graph = data.get_distance_matrix()
     
     dimension = data.get_dimension()
