@@ -1,12 +1,14 @@
 import random
+from multiprocessing import shared_memory
+import numpy as np
 
 from load_tsp import loadTSP
 
 class Permutation:
-    graph = [[]]
+    # graph = [[]]
     dimension: int
 
-    def __init__(self, testPath):
+    def __init__(self, shm_name: str, shape, dtype):
         """Init class
 
         takes path to test case as input
@@ -14,11 +16,12 @@ class Permutation:
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        tsp = loadTSP(testPath)
+        # Set reference to graph in shared memory
+        self._shm = shared_memory.SharedMemory(name=shm_name)
+        # existing_shm = shared_memory.SharedMemory(name=shm_name)
+        self.graph = np.ndarray(shape, dtype=dtype, buffer=self._shm.buf)
         
-        self.graph = tsp.get_distance_matrix()
-        self.dimension = tsp.get_dimension()
-
+        # print(self.graph[0, 1])
         
         return
     
