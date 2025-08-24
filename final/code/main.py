@@ -27,4 +27,4 @@ tsp = TSP(testPath, savePath)
 tsp.localSearch(iterations)
 
 # Output data summary
-runDataSummary.processData(tsp.getSavePath())
+runDataSummary.process_data(tsp.getSavePath())
