@@ -22,6 +22,8 @@ import csv
 import os
 import sys
 from typing import List, Tuple, Optional
+from multiprocessing import shared_memory
+import numpy as np
 
 from tsp import TSP
 from crossover import Crossover
@@ -76,7 +78,9 @@ class EvolutionaryAlgorithm:
         }
 
     def initialize_population(self) -> None:
-        """Initialize the population with random individuals."""
+        """
+        Initialize the population with random individuals.
+        """
         self.population = []
         for _ in range(self.population_size):
             individual = self.tsp.generate_random_path(self.tsp.dimension)
@@ -87,7 +91,9 @@ class EvolutionaryAlgorithm:
         print(f"Population initialized with {self.population_size} individuals")
 
     def evaluate_population(self) -> None:
-        """Evaluate fitness for all individuals in the population."""
+        """
+        Evaluate fitness for all individuals in the population.
+        """
         self.fitness_scores = []
         for individual in self.population:
             fitness = self.tsp.permutationCost(individual)
@@ -276,7 +282,8 @@ class EvolutionaryAlgorithm:
         # Evaluate new population
         self.evaluate_population()
 
-    def run_evolution(self, generations: int, 
+    def run_evolution(self, shm_name: str, shape, dtype,
+                     generations: int, 
                      selection_method: str = 'tournament',
                      crossover_method: str = 'order', 
                      mutation_method: str = 'swap',
@@ -534,7 +541,9 @@ class EvolutionaryAlgorithm:
 
 
 def main():
-    """Main function to run the evolutionary algorithm."""
+    """
+    Main function to run the evolutionary algorithm.
+    """
     parser = argparse.ArgumentParser(description='Evolutionary Algorithm for TSP')
     parser.add_argument('generations', type=int, help='Number of generations to run')
     parser.add_argument('tsp_file', type=str, help='Path to TSP problem file')

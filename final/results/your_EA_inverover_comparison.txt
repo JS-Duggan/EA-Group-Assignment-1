@@ -1,0 +1,6 @@
+Among the three evolutionary algorithms tested in Exercise 6, the exploitative algorithm performed the best, achieivng lower mean tour lengths
+than the balanced or exploratory algorithms. However, it still performed worse than the Inver-Over Evolutionary Algorithm. Across the TSP
+instances, the Inver-Over resulted in consistently lower mean values and standard deviations. This means that the Inver-Over not only produces
+better results, but also provides more consistency and reliability. Therefore, even though the exploitative approach performed well compared
+to the other designed algorithms, the Inver-Over provides the most optimal and reliable performance. 
+

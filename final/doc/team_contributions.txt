@@ -7,16 +7,31 @@ Members:
 - Zhu, Zhenshu (a1933054)
 
 Allocations Exersise 1 & 2
-- Load in tsp data and process travel costs: 
+- Load in tsp data and process travel costs: Zhenshu
 - Generate initial path: Jayom
 - Implement jump switching: Mohon
 - Implement exchange switching: Jack
 - Implement inverse switching: Liam
 - Integrate localSearch to file saving: Cooper
 
-- Excercise 3: Jayom
-- Exercise 5: Mohon
-- Clearing up Exercise 1 and 2: Liam
-- Exercise 4 (mutation): Cooper
-- Exercise 4 (crossover): Jack
-- Exercise 7: George
+- Optimisation: Liam + Jack
+- Testing: Liam
+- Data collection: Liam
+
+Allocations Exersise 3 - 6
+- Exersise 3: Jayom
+- Exersise 4 - Mutation: Cooper
+- Exersise 4 - Cross Over: Jack
+- Exersise 5: Mohon
+- General testing: Liam
+- Optimisation: Liam
+- Data collection: Liam
+
+Allocations Exersise 7
+- Inver-over code: Zhenshu
+- Testing: Zhenshu
+- Data collection: Zhenshu
+
+General
+- Documentation: Cooper
+- Code cleanup: Cooper

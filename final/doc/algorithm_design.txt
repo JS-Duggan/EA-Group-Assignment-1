@@ -1,0 +1,47 @@
+The three evolutionary aglorithms the team designed each focussed on a particular aspect so then it can be determined which paradigm 
+would lead to the most desirable results.
+
+Algorithm 1: Balanced Exploration and Exploitation
+Selection: Tournament Selection
+Crossover: Partially Mapped Crossover (PMX)
+Mutation: Swap Mutation
+
+Justification:
+Tournament selection ensures that early convergence is avoided compared to a method like fitness-proportional during later runs, which can get
+due to dominating solutions. By selecting a small tourament size of 3, the very best individuas would not be able to dominates the
+population, keeping some diversity and reducing the possibility of premature convergence. The PMX operator would assist in preserving the 
+relative ordering from the parents, so good subtours can be passed on reliably, hence maintaining a good balance between preservation and 
+variation. Finally, the swap mutation introduces diversity without completely disturbing the structure of a good solution. Since it makes small
+changes, it would not be too disruptive, which works well in combination with PMX. This balance between exploration and exploitation was chosen
+as a middle ground and to observe how it fairs compared to the two extremes investigated in Algorithms 2 and 3. 
+
+
+
+
+Algorithm 2: Exploration and Diversity Focused
+Selection: Fitness-Proportional Selection
+Crossover: Cycle Crossover
+Mutation: Insertion Mutation
+
+Justificaiton:
+Although fitness-proportional can get exploitative during later stages of running the algorithm, it would promote more exploration during the
+early or mid stages. Hence, weaker individuals would persist for longer, resulting in an expected slower convergence. Cycle Crossover
+ensures that each city in the child apperas in the same position as the parent. This would create more variation among children, allowing for
+a more exploratorive approach. However, since each position still comes from the parent, it is not completely destructive. The insertion mutation
+further supports exploration by removing a cty from its position and re-inserting it elswhere. It would also help in breaking out of undesirable
+local configurations by moving cities across a tour.
+
+
+
+Algorithm 3: Exploitative and Refinement Focused
+Selection: Elitism (keeping top 5-10% unchanged each generation) + Tournament selection for the rest.
+Crossover: Edge Recombination Crossover
+Mutation: Inversion Mutation
+
+Justification:
+Elitism would ensure that the very best solutions survive in each generation. Tournament selection is used because it can be used to still
+preserve some diversity. Keeping it around 3 ensures that weaker individuals still have a chance to be selected, preserving some diversity and
+ensures that the entire population does not begin to clone the elite solutions too quickly. Edge Recombination is chosen because it preserves
+as many parent edges as possible in the children, so if the arents are already good solutions, then the children already have a good foundation,
+following the exploitative setup of this algorithm. Finally, Inversion Mutation was chosen because it acts as more of a refinement operator 
+as it reverses a segment of the tour, rather than being more exploratory like swap or insertion.
