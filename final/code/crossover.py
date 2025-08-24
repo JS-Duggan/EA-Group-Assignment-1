@@ -13,7 +13,8 @@ Expected output for all methods:
 
 
 class Crossover:
-    """Collection of crossover operators for permutations.
+    """
+    Collection of crossover operators for permutations.
 
     Methods assume parents are permutations (no duplicates) and return two
     children of the same length. No validation is performed.
@@ -22,8 +23,9 @@ class Crossover:
     def __init__(self):
         return
 
-    def order_crossover(self, parent_1, parent_2):
-        """Order Crossover (OX).
+    def orderCrossover(self, parent_1, parent_2):
+        """
+        Order Crossover (OX).
 
         Inputs:
             parent_1, parent_2 (list): equal-length permutations.
@@ -72,8 +74,9 @@ class Crossover:
 
         return child_1, child_2
 
-    def partially_mapped_crossover(self, parent_1, parent_2):
-        """Partially Mapped Crossover (PMX).
+    def partiallyMappedCrossover(self, parent_1, parent_2):
+        """
+        Partially Mapped Crossover (PMX).
 
         Inputs:
             parent_1, parent_2 (list): equal-length permutations.
@@ -143,8 +146,9 @@ class Crossover:
 
         return child_1, child_2
 
-    def cycle_crossover(self, parent_1, parent_2):
-        """Cycle Crossover (CX).
+    def cycleCrossover(self, parent_1, parent_2):
+        """
+        Cycle Crossover (CX).
 
         Inputs:
             parent_1, parent_2 (list): equal-length permutations.

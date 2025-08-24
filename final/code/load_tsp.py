@@ -1,17 +1,48 @@
 import math
 import numpy as np
 
-class loadTSP:
-    def __init__(self, file_path):
-        self.file_path = file_path
+"""Example usage:
+
+if __name__ == "__main__":
+    tsp = TSP("usa13509.tsp")
+    coords = tsp.getCoordinates()
+    distMatrix = tsp.getDistanceMatrix()
+
+    print(f"Loaded {len(coords)} cities.")
+    print("First 5 coordinates:", coords[:5])
+    print("Distance between city 0 and 1:", distMatrix[0][1])
+
+if __name__ == "__main__":
+    tsp = TSP("usa13509.tsp")
+    print(f"Loaded {len(tsp.coordinates)} cities.")
+    print("First 5 coordinates:", tsp.coordinates[:5])
+    print("Distance between city 0 and 1:", tsp.getDistance(0, 1))
+"""
+
+class LoadTSP:
+    """
+    Loads data from a TSP instance
+    """
+
+    def __init__(self, filePath):
+        """ 
+        Loads and prepares the TSP instance
+        
+        Inputs:
+            filePath (string): the file containing the instance of TSP that will be processed.
+        """
+        self.filePath = filePath
         self.dimension = None
         self.coordinates = []
         self.distance_matrix = None
-        self._parse_tsplib_file()
-        self._compute_distance_matrix()
+        self._parseTsplibFile()
+        self._computeDistanceMatrix()
 
-    def _parse_tsplib_file(self):
-        with open(self.file_path, "r") as f:
+    def _parseTsplibFile(self):
+        """
+        Loads in the data for the TSP instance based on the filePath variable. Data is saved into a local variable coordinates.
+        """
+        with open(self.filePath, "r") as f:
             lines = f.readlines()
 
         reading_coords = False
@@ -44,52 +75,46 @@ class loadTSP:
                 f"Mismatch: DIMENSION={self.dimension}, but found {len(self.coordinates)} coordinates."
             )
 
-    # def _compute_distance_matrix(self):
-    #     """Creates an NxN matrix with Euclidean distances between cities."""
-    #     n = self.dimension
-    #     self.distance_matrix = [[0.0] * n for _ in range(n)]
-    #     for i in range(n):
-    #         for j in range(n):
-    #             if i != j:
-    #                 self.distance_matrix[i][j] = math.dist(self.coordinates[i], self.coordinates[j])
-    
-    def _compute_distance_matrix(self):
-        """Creates an NxN matrix with Euclidean distances between cities."""
+    def _computeDistanceMatrix(self):
+        """
+        Creates an NxN matrix with Euclidean distances between cities.
+        """
         n = self.dimension
-        self.distance_matrix = np.zeros((n, n))
+        self.distanceMatrix = np.zeros((n, n))
         for row in range(n):
             for col in range(n):
                 if row != col:
                     dx = self.coordinates[row][0] - self.coordinates[col][0]
                     dy = self.coordinates[row][1] - self.coordinates[col][1]
                     dist = math.sqrt(dx * dx + dy * dy)
-                    self.distance_matrix[row, col] = dist
+                    self.distanceMatrix[row, col] = dist
 
-    # def get_coordinates(self):
-    #     return self.coordinates
-    
-    def get_distance(self, row, col):
-        return self.distance_matrix[row, col]
+    def getDistance(self, row, col):
+        """
+        Returns the distance between two cities at index row and col.
 
-    def get_distance_matrix(self):
-        return self.distance_matrix
+        Inputs:
+            row, col (int): start location and end location which distance is being calculated for. Indexes into a matrix representing a 2D array.
+        Returns:
+            distance (int): the distance between the two locations. 
+        """
+        return self.distanceMatrix[row, col]
+
+    def getDistanceMatrix(self):
+        """
+        Returns the full distance matrix of the TSP.
+        
+        Returns:
+            distanceMatrix (Matrix(int)): the distance matrix
+        """
+        return self.distanceMatrix
     
-    def get_dimension(self):
+    def getDimension(self):
+        """
+        Returns the number of nodes in the TSP.
+        
+        Returns:
+            dimension (int): the dimension. 
+        """
         return self.dimension
 
-
-# Example usage
-# if __name__ == "__main__":
-#     tsp = TSP("usa13509.tsp")
-#     coords = tsp.get_coordinates()
-#     dist_matrix = tsp.get_distance_matrix()
-
-#     print(f"Loaded {len(coords)} cities.")
-#     print("First 5 coordinates:", coords[:5])
-#     print("Distance between city 0 and 1:", dist_matrix[0][1])
-
-# if __name__ == "__main__":
-#     tsp = TSP("usa13509.tsp")
-#     print(f"Loaded {len(tsp.coordinates)} cities.")
-#     print("First 5 coordinates:", tsp.coordinates[:5])
-#     print("Distance between city 0 and 1:", tsp.get_distance(0, 1))

@@ -1,67 +1,73 @@
 import random
 
-from load_tsp import loadTSP
+from load_tsp import LoadTSP
 
 class Permutation:
+    """
+    An base class that contains the basic mutation operators for a permutation
+    """
+
     graph = [[]]
     dimension: int
 
-    def __init__(self, testPath):
-        """Init class
+    def __init__(self, test_path):
+        """
+        Generates the graph of distancesses between each pair of nodes for the TSP instance
 
-        takes path to test case as input
-        edits private variable 'graph'
-        graph is 2d array, where graph[i][j] = distance between i and j
+        Inputs:
+            test_path (string): the relative file location of the TSP isntance
+
         """
         
-        tsp = loadTSP(testPath)
+        tsp = LoadTSP(test_path)
         
-        self.graph = tsp.get_distance_matrix()
-        self.dimension = tsp.get_dimension()
-
-        
-        return
-    
-    # def random_pairs(self, n):
-    #     # Generate all unique index pairs (i, j) where i < j
-    #     pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
-    #     random.shuffle(pairs)  # Randomize the order of swaps
-    #     return pairs
+        self.graph = tsp.getDistanceMatrix()
+        self.dimension = tsp.getDimension()
     
     def permutationCost(self, perm):
+        """
+        Calculates the cost of a permutation through the TSP
+
+        Inputs:
+            perm (list[int]): the permutation through the TSP 
+
+        Outputs:
+            cost (int): the calcualted cost of the permutation through the TSP
+
+        """
         n = len(perm)
         cost = 0
         for i in range(n):
             cost += self.graph[perm[i], perm[(i + 1) % n]]
         return cost
     
-    def random_pair(self, n):
+    def randomPair(self, n):
         """
         Generate a single random pair i, j where i < j < n
         
-        Args:
+        Inputs:
             n (int): Number of cities
         
-        Returns:
+        Outputs:
             (int, int): Random pair (i, j)
         """
         i = random.randint(0, n - 2)
         j = random.randint(i + 1, n - 1)
         return i, j
     
-    def delta_swap_cost(self, perm, cost, i, j):
+    def deltaSwapCost(self, perm, cost, i, j):
         """
         Calculate the new tour cost if cities at positions i and j are swapped,
         using delta evaluation instead of recalculating the whole cost.
 
-        Args:
+        Inputs:
             perm (list[int]): Current tour
             cost (float): Cost of the tour
             i (int): First swap position
             j (int): Second swap position
 
-        Returns:
-            float: New tour cost after swapping i and j"""
+        Outputs:
+            cost (float): New tour cost after swapping i and j"""
         # Handle invalid swap cases
         n = len(perm)
 
@@ -93,33 +99,35 @@ class Permutation:
         # Return updated cost
         return cost + (new_cost - old_cost)
 
-    def swap_pair(self, perm, i, j):
+    def swapPair(self, perm, i, j):
         """
         Perform swap between i and j node in the permutation
 
-        Args:
+        Inputs:
             perm (list[int]): Current tour
             i (int): First swap position
             j (int): Second swap position
-        Returns:
-            list[int]: The resultant permutation 
+
+        Outputs:
+            perm (list[int]): The resultant permutation 
         """
         perm[i], perm[j] = perm[j], perm[i]
         return perm
     
-    def delta_inversion_cost(self, perm, cost, i, j):
+    def deltaInversionCost(self, perm, cost, i, j):
         """
         Calculate the cost after inversion between i and j.
         Only the costs entering (i - 1 to i) and exiting (j to j + 1) the inversion change
         as the graph is undirected.
-        Args:
+
+        Inputs:
             perm (list[int]): Current tour
             cost (float): Cost of the tour
             i (int): Inversion start
             j (int): Inversion end
 
-        Returns:
-            float: New tour cost after inversion between i and j
+        Outputs:
+            cost (float): New tour cost after inversion between i and j
         """
         n = len(perm)
         
@@ -136,16 +144,17 @@ class Permutation:
             
         return cost
     
-    def inversion_pair(self, perm, i, j):
+    def inversionPair(self, perm, i, j):
         """
         Perform inversion of i and j.  
 
-        Args:
+        Inputs:
             perm (list[int]): Current tou
             i (int): Inversion start (must be less than j)
             j (int): Inversion end
-        Returns:
-            list[int] : The resultant permutation
+
+        Outputs:
+            new_perm (list[int]): The resultant permutation
         """
         
         new_perm = perm.copy()
@@ -157,19 +166,19 @@ class Permutation:
             end -= 1
         return new_perm
     
-    def delta_jump_cost(self, perm, cost, i, j):
+    def deltaJumpCost(self, perm, cost, i, j):
         """
         Calculate the cost after jump i to j, using delta evaluation instead of
         recalculating the whole cost.
 
-        Args:
+        Inputs:
             perm (list[int]): Current tour
             cost (float): Cost of the tour
             i (int): Jump from
             j (int): Jump to
 
-        Returns:
-            float: New tour cost after jump
+        Outputs:
+            cost (float): New tour cost after jump
         """
         n = len(perm)
         
@@ -199,17 +208,17 @@ class Permutation:
             
         return cost
     
-    def jump_pair(self, perm, i, j):
+    def jumpPair(self, perm, i, j):
         """
         Perform jump on i to j
 
-        Args:
+        Inputs:
             perm (list[int]): Current tour
             i (int): Jump from
             j (int): Jump to
 
-        Returns:
-            list[int]: The resutant permutation
+        Outputs:
+            perm (list[int]): The resutant permutation
         """
         city = perm.pop(i)
         perm.insert(j, city) 

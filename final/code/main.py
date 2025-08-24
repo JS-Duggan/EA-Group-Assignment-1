@@ -1,9 +1,11 @@
 import argparse
 
-import runDataSummary
+import data_summary
 from tsp import TSP
 
 """
+Runs the TSP algorithm for Exercise 2 on a particular TSP instance
+
 Run in terminal: python main.py tsp_instance iterations
 
 tsp_instance: e.g., 'eil51'
@@ -18,13 +20,13 @@ args = parser.parse_args()
 tsp_instance = args.tsp_instance
 iterations = int(args.iterations)
 
-testPath = f'final/code/test_cases/{tsp_instance}.tsp'
-savePath = f'final/code/saves/{tsp_instance}.csv'
+test_path = f'final/code/test_cases/{tsp_instance}.tsp'
+save_path = f'final/code/saves/{tsp_instance}.csv'
 
-tsp = TSP(testPath, savePath)
+tsp = TSP(test_path, save_path)
 
 # Run local search
 tsp.localSearch(iterations)
 
 # Output data summary
-runDataSummary.processData(tsp.getSavePath())
+data_summary.processData(tsp.getSavePath())
