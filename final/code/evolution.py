@@ -6,9 +6,9 @@ Evolutionary Algorithm for the Traveling Salesman Problem (TSP)
 This script implements a genetic algorithm with:
 - Population size: 50 individuals
 - Configurable number of generations via command line argument
-- Tournament and roulette wheel selection operators
-- Order crossover, partially mapped crossover, and cycle crossover
-- Mutation operators using swap, inversion, and jump operations
+- Tournament and roulette wheel selection operators (from selection.py)
+- Order crossover, partially mapped crossover, and cycle crossover (from crossover.py)
+- Mutation operators using swap, inversion, and jump operations (from permutation.py)
 - Elitism preservation strategy
 
 Usage:
@@ -27,6 +27,7 @@ from tsp import TSP
 from crossover import Crossover
 from Population import Population
 from Individual import Individual
+from selection import Selection
 
 
 class EvolutionaryAlgorithm:
@@ -43,6 +44,7 @@ class EvolutionaryAlgorithm:
         self.tsp = tsp_instance
         self.population_size = population_size
         self.crossover = Crossover()
+        self.selection = Selection()
         self.population = []
         self.fitness_scores = []
         self.best_individual = None
@@ -59,14 +61,18 @@ class EvolutionaryAlgorithm:
         self.crossover_operators = {
             'order': self.crossover.order_crossover,
             'pmx': self.crossover.partially_mapped_crossover,
-            'cycle': self.crossover.cycle_crossover
+            'cycle': self.crossover.cycle_crossover,
+            'erx': self.crossover.edge_recombination_crossover
         }
         
         # Mutation operators
         self.mutation_operators = {
             'swap': self._mutation_swap,
+            'exchange': self._mutation_swap,  # Alias for swap
             'inversion': self._mutation_inversion,
-            'jump': self._mutation_jump
+            'invert': self._mutation_inversion,  # Alias for inversion
+            'jump': self._mutation_jump,
+            'insert': self._mutation_jump  # Alias for jump (same operation)
         }
 
     def initialize_population(self) -> None:
@@ -94,7 +100,7 @@ class EvolutionaryAlgorithm:
 
     def tournament_selection(self, tournament_size: int = 3) -> List[int]:
         """
-        Tournament selection operator.
+        Tournament selection operator using selection.py.
         
         Args:
             tournament_size: Number of individuals in tournament
@@ -102,39 +108,41 @@ class EvolutionaryAlgorithm:
         Returns:
             Selected individual (tour)
         """
-        tournament_indices = random.sample(range(self.population_size), tournament_size)
-        tournament_fitness = [self.fitness_scores[i] for i in tournament_indices]
-        winner_idx = tournament_indices[tournament_fitness.index(min(tournament_fitness))]
-        return self.population[winner_idx].copy()
+        # Convert fitness to maximization (lower cost = higher fitness)
+        max_fitness = max(self.fitness_scores) + 1
+        maximized_fitness = [max_fitness - f for f in self.fitness_scores]
+        
+        # Select k random contestants
+        contestants_idx = random.sample(range(self.population_size), tournament_size)
+        contestants = [self.population[i] for i in contestants_idx]
+        contestant_fitness = [maximized_fitness[i] for i in contestants_idx]
+        
+        # Use selection.py tournament method on contestants
+        selected = self.selection.tournament(contestants, contestant_fitness, k=tournament_size, p=1.0)
+        return selected[0].copy()
 
     def roulette_wheel_selection(self) -> List[int]:
         """
-        Roulette wheel selection operator (fitness proportionate selection).
-        For minimization problems, we use inverse fitness.
+        Roulette wheel selection operator using selection.py.
         
         Returns:
             Selected individual (tour)
         """
-        # Convert to maximization problem by using inverse fitness
-        # Add small constant to avoid division by zero
-        inverse_fitness = [1.0 / (f + 1.0) for f in self.fitness_scores]
-        total_fitness = sum(inverse_fitness)
+        # Convert fitness to maximization (lower cost = higher fitness)
+        max_fitness = max(self.fitness_scores) + 1
+        maximized_fitness = [max_fitness - f for f in self.fitness_scores]
         
-        # Roulette wheel spin
-        spin = random.uniform(0, total_fitness)
-        current_sum = 0
+        # Use the fitness_proportional method from selection.py
+        # It expects to select a full population, so we select one and take the first
+        temp_population = [self.population[i] for i in range(len(self.population))]
+        selected_population = self.selection.fitness_proportional(temp_population, maximized_fitness)
         
-        for i, fitness in enumerate(inverse_fitness):
-            current_sum += fitness
-            if current_sum >= spin:
-                return self.population[i].copy()
-        
-        # Fallback (should not reach here)
-        return self.population[-1].copy()
+        # Return a random individual from the selected population (since we only need one)
+        return random.choice(selected_population).copy()
 
     def _mutation_swap(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
         """
-        Swap mutation operator.
+        Swap mutation operator using permutation.py methods.
         
         Args:
             individual: Tour to mutate
@@ -151,7 +159,7 @@ class EvolutionaryAlgorithm:
 
     def _mutation_inversion(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
         """
-        Inversion mutation operator.
+        Inversion mutation operator using permutation.py methods.
         
         Args:
             individual: Tour to mutate
@@ -168,7 +176,7 @@ class EvolutionaryAlgorithm:
 
     def _mutation_jump(self, individual: List[int], mutation_rate: float = 0.1) -> List[int]:
         """
-        Jump mutation operator.
+        Jump mutation operator using permutation.py methods.
         
         Args:
             individual: Tour to mutate
@@ -337,6 +345,11 @@ class EvolutionaryAlgorithm:
         Args:
             save_path: Path to save the results
         """
+        # Ensure the directory exists
+        save_dir = os.path.dirname(save_path)
+        if save_dir:
+            os.makedirs(save_dir, exist_ok=True)
+        
         # Create unique filename if file exists
         base_path = save_path
         counter = 1
@@ -377,6 +390,148 @@ class EvolutionaryAlgorithm:
         
         return total_distance / comparisons if comparisons > 0 else 0.0
 
+    def balanced(self, population: List[List[int]], num_generations: int, tsp_object: TSP) -> Tuple[List[List[int]], float]:
+        """
+        Balanced evolutionary approach.
+        
+        Configuration:
+        - Selection: Tournament selection
+        - Crossover: Partially Mapped Crossover (PMX)
+        - Mutation: Swap mutation
+        
+        Args:
+            population: Initial population
+            num_generations: Number of generations to evolve
+            tsp_object: TSP problem instance with graph and mutation operators
+            
+        Returns:
+            Tuple of (final_population, best_cost)
+        """
+        # Use the provided TSP object
+        self.tsp = tsp_object
+        self.population = [ind.copy() for ind in population]
+        self.population_size = len(population)
+        self.evaluate_population()
+        
+        print(f"Running BALANCED algorithm for {num_generations} generations...")
+        print("Configuration: Tournament selection + PMX crossover + Swap mutation")
+        
+        for generation in range(num_generations):
+            self.evolve_generation(
+                selection_method='tournament',
+                crossover_method='pmx',
+                mutation_method='swap',
+                mutation_rate=0.1,
+                elitism_count=2
+            )
+            
+            if (generation + 1) % 10 == 0:
+                current_best = min(self.fitness_scores)
+                current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
+                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}")
+        
+        best_cost = self.best_fitness
+        final_population = [ind.copy() for ind in self.population]
+        
+        print(f"BALANCED completed. Best cost: {best_cost:.2f}")
+        return final_population, best_cost
+
+    def exploration(self, population: List[List[int]], num_generations: int, tsp_object: TSP) -> Tuple[List[List[int]], float]:
+        """
+        Exploration-focused evolutionary approach (diversity focused).
+        
+        Configuration:
+        - Selection: Fitness-proportional selection
+        - Crossover: Cycle crossover
+        - Mutation: Insert mutation
+        
+        Args:
+            population: Initial population
+            num_generations: Number of generations to evolve
+            tsp_object: TSP problem instance with graph and mutation operators
+            
+        Returns:
+            Tuple of (final_population, best_cost)
+        """
+        # Use the provided TSP object
+        self.tsp = tsp_object
+        self.population = [ind.copy() for ind in population]
+        self.population_size = len(population)
+        self.evaluate_population()
+        
+        print(f"Running EXPLORATION algorithm for {num_generations} generations...")
+        print("Configuration: Fitness-proportional selection + Cycle crossover + Insert mutation")
+        
+        for generation in range(num_generations):
+            self.evolve_generation(
+                selection_method='roulette',
+                crossover_method='cycle',
+                mutation_method='insert',
+                mutation_rate=0.15,  # Higher mutation rate for exploration
+                elitism_count=1      # Less elitism for more exploration
+            )
+            
+            if (generation + 1) % 10 == 0:
+                current_best = min(self.fitness_scores)
+                current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
+                diversity = self.get_population_diversity()
+                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Diversity={diversity:.2f}")
+        
+        best_cost = self.best_fitness
+        final_population = [ind.copy() for ind in self.population]
+        
+        print(f"EXPLORATION completed. Best cost: {best_cost:.2f}")
+        return final_population, best_cost
+
+    def exploitation(self, population: List[List[int]], num_generations: int, tsp_object: TSP) -> Tuple[List[List[int]], float]:
+        """
+        Exploitation-focused evolutionary approach (convergence and refinement).
+        
+        Configuration:
+        - Selection: Elitism (keep top 5-10% unchanged) + Tournament selection for the rest
+        - Crossover: Edge Recombination Crossover (ERX)
+        - Mutation: Inversion mutation
+        
+        Args:
+            population: Initial population
+            num_generations: Number of generations to evolve
+            tsp_object: TSP problem instance with graph and mutation operators
+            
+        Returns:
+            Tuple of (final_population, best_cost)
+        """
+        # Use the provided TSP object
+        self.tsp = tsp_object
+        self.population = [ind.copy() for ind in population]
+        self.population_size = len(population)
+        self.evaluate_population()
+        
+        print(f"Running EXPLOITATION algorithm for {num_generations} generations...")
+        print("Configuration: Elitism + Tournament selection + ERX crossover + Inversion mutation")
+        
+        # Calculate elite count (5-10% of population)
+        elite_count = max(2, int(0.07 * self.population_size))  # 7% elitism
+        
+        for generation in range(num_generations):
+            self.evolve_generation(
+                selection_method='tournament',
+                crossover_method='erx',
+                mutation_method='inversion',
+                mutation_rate=0.05,  # Lower mutation rate for exploitation
+                elitism_count=elite_count
+            )
+            
+            if (generation + 1) % 10 == 0:
+                current_best = min(self.fitness_scores)
+                current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
+                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Elites={elite_count}")
+        
+        best_cost = self.best_fitness
+        final_population = [ind.copy() for ind in self.population]
+        
+        print(f"EXPLOITATION completed. Best cost: {best_cost:.2f}")
+        return final_population, best_cost
+
 
 def main():
     """Main function to run the evolutionary algorithm."""
@@ -387,9 +542,9 @@ def main():
                        help='Path to save results (optional)')
     parser.add_argument('--selection', type=str, choices=['tournament', 'roulette'], 
                        default='tournament', help='Selection method')
-    parser.add_argument('--crossover', type=str, choices=['order', 'pmx', 'cycle'], 
+    parser.add_argument('--crossover', type=str, choices=['order', 'pmx', 'cycle', 'erx'], 
                        default='order', help='Crossover method')
-    parser.add_argument('--mutation', type=str, choices=['swap', 'inversion', 'jump'], 
+    parser.add_argument('--mutation', type=str, choices=['swap', 'exchange', 'inversion', 'invert', 'jump', 'insert'], 
                        default='swap', help='Mutation method')
     parser.add_argument('--mutation_rate', type=float, default=0.1, 
                        help='Mutation rate (0.0-1.0)')
@@ -421,7 +576,10 @@ def main():
     # Set default save path if not provided
     if args.save_path is None:
         tsp_filename = os.path.splitext(os.path.basename(args.tsp_file))[0]
-        args.save_path = f"evolution_results_{tsp_filename}.csv"
+        # Create saves directory if it doesn't exist
+        saves_dir = "./saves"
+        os.makedirs(saves_dir, exist_ok=True)
+        args.save_path = os.path.join(saves_dir, f"evolution_results_{tsp_filename}.csv")
     
     try:
         # Initialize TSP instance
