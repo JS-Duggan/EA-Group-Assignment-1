@@ -1,10 +1,3 @@
-Test your local algorithms on the instances EIL51, EIL76, EIL101, ST70, KROA100,
-KROC100, KROD100, LIN105, PCB442, PR2392, USA13509 from TSPlib. Run
-each local search algorithm on each instance 30 times where in each run the initial
-permutation is chosen uniformly at random. Report for each algorithm on each
-instance in a file results/local_search.txt the minimum and mean tour length
-obtained.
-
 EIL51:
     Jump: 
         - mean = 490.1666666666667
