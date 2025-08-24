@@ -22,6 +22,7 @@ def wrapper(args):
     
     results = []
     for i in range(runs):
+        print(i)
         results.append(ea.exploitation(population, generations, tsp)) # EA function
         
     return results
@@ -84,8 +85,8 @@ def main():
     std = np.std(res)
     
     print(f"Runs: {len(res)}")
-    print(f"- mean: {mean}")
-    print(f"- std: {std}")
+    print(f"- mean = {mean}")
+    print(f"- std = {std}")
     
     
     # Cleanup
