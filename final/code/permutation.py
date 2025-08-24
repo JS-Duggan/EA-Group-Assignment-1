@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 from load_tsp import loadTSP
 
@@ -6,7 +7,7 @@ class Permutation:
     graph = [[]]
     dimension: int
 
-    def __init__(self, testPath):
+    def __init__(self, testPath, sharedMemory: bool):
         """Init class
 
         takes path to test case as input
@@ -14,11 +15,10 @@ class Permutation:
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        tsp = loadTSP(testPath)
-        
-        self.graph = tsp.get_distance_matrix()
-        self.dimension = tsp.get_dimension()
-
+        if not sharedMemory:
+            tsp = loadTSP(testPath)
+            self.graph = tsp.get_distance_matrix()
+            self.dimension = tsp.get_dimension()
         
         return
     

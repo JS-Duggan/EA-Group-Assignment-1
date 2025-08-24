@@ -4,6 +4,7 @@ import csv
 import typing
 import time
 import numpy as np
+from multiprocessing import shared_memory
 
 from load_tsp import loadTSP
 from permutation import Permutation
@@ -18,7 +19,7 @@ class TSP(Permutation):
         random.shuffle(path)
         return path
 
-    def __init__(self, testPath, savePath):
+    def __init__(self, testPath, savePath, dimension = None, sharedMemory = False):
         """Init class
 
         takes path to test case as input
@@ -26,10 +27,17 @@ class TSP(Permutation):
         graph is 2d array, where graph[i][j] = distance between i and j
         """
         
-        super().__init__(testPath)
+        self.dimension = dimension
+        
+        super().__init__(testPath, sharedMemory)
         
         self.loadSaveFile(savePath)
-        return       
+        return
+    
+    def load_shared_memory(self, shmName: str, shape, dtype):
+        # Set reference to graph in shared memory
+        self._shm = shared_memory.SharedMemory(name=shmName)
+        self.graph = np.ndarray(shape, dtype=dtype, buffer=self._shm.buf)
 
     def exchange(self, perm, cost):
         """
@@ -53,11 +61,6 @@ class TSP(Permutation):
             n_cost = self.delta_swap_cost(perm, cost, i, j)
             if n_cost < cost - 1e-9:
                 
-
-
-    
-    
-
                 return self.swap_pair(perm.copy(), i, j), n_cost
         return perm, cost
 
