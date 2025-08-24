@@ -77,7 +77,9 @@ class EvolutionaryAlgorithm:
         }
 
     def initialize_population(self) -> None:
-        """Initialize the population with random individuals."""
+        """
+        Initialize the population with random individuals.
+        """
         self.population = []
         for _ in range(self.population_size):
             individual = self.tsp.generate_random_path(self.tsp.dimension)
@@ -88,7 +90,9 @@ class EvolutionaryAlgorithm:
         print(f"Population initialized with {self.population_size} individuals")
 
     def evaluate_population(self) -> None:
-        """Evaluate fitness for all individuals in the population."""
+        """
+        Evaluate fitness for all individuals in the population.
+        """
         self.fitness_scores = []
         for individual in self.population:
             fitness = self.tsp.permutationCost(individual)
@@ -426,10 +430,10 @@ class EvolutionaryAlgorithm:
                 elitism_count=2
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
@@ -472,11 +476,11 @@ class EvolutionaryAlgorithm:
                 elitism_count=1      # Less elitism for more exploration
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
                 diversity = self.get_population_diversity()
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Diversity={diversity:.2f}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Diversity={diversity:.2f}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
@@ -522,10 +526,10 @@ class EvolutionaryAlgorithm:
                 elitism_count=elite_count
             )
             
-            if (generation + 1) % 10 == 0:
+            if (generation + 1) % 5000 == 0:
                 current_best = min(self.fitness_scores)
                 current_avg = sum(self.fitness_scores) / len(self.fitness_scores)
-                print(f"Generation {generation + 1:4d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Elites={elite_count}")
+                print(f"Generation {generation + 1:5d}: Best={current_best:8.2f}, Avg={current_avg:8.2f}, Elites={elite_count}")
         
         best_cost = self.best_fitness
         final_population = [ind.copy() for ind in self.population]
@@ -535,7 +539,9 @@ class EvolutionaryAlgorithm:
 
 
 def main():
-    """Main function to run the evolutionary algorithm."""
+    """
+    Main function to run the evolutionary algorithm.
+    """
     parser = argparse.ArgumentParser(description='Evolutionary Algorithm for TSP')
     parser.add_argument('generations', type=int, help='Number of generations to run')
     parser.add_argument('tsp_file', type=str, help='Path to TSP problem file')
