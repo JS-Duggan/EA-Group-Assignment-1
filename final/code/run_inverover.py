@@ -1,3 +1,14 @@
+"""
+For running the inverover algorithm over 30 iterations.
+The code runs the iterations in parallel to make better use of the
+computer's resources and significantly speed up the run time.
+
+To run in terminal:
+    cd final/code
+    python run_inverover.py --instances_glob tsp_path
+        e.g.,: python run_inverover.py --instances_glob test_cases/eil51.tsp
+"""
+
 
 from __future__ import annotations
 import argparse, glob, time
@@ -47,7 +58,6 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     
     num_workers = multiprocessing.cpu_count()
-    # num_workers = 2
     runs_per_worker = args.runs // num_workers
     extra_runs = args.runs % num_workers
 
@@ -62,7 +72,7 @@ def main():
             data = LoadTSP(p)
             graph = data.get_distance_matrix()
             
-            # Create shared memory
+            # Create shared memory for distance matrix
             shm = shared_memory.SharedMemory(create=True, size=graph.nbytes)
             shared_graph = np.ndarray(graph.shape, dtype=graph.dtype, buffer=shm.buf)
             shared_graph[:] = graph[:]  # copy data

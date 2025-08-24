@@ -205,7 +205,12 @@ PR2392:
         - max = 447118
         - min = 432363
 
-USA13509 (capped at 170,000 iterations):
+USA13509:
+(Capped at 170,000 iterations, as beyond ~160,000 iterations,
+the running average improvement of tour cost slowed from a
+proportion of >1e-5 over 500 iterations to <1e-5. This was 
+necessary otherwise the algorithms would take too long to run
+30 iterations)
     Jump: 
         - mean = 70490097.63333334
         - median = 70469314.0
