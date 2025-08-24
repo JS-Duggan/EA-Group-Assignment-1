@@ -11,7 +11,14 @@ import sys
 import os
 
 def run_evolution(generations, tsp_file, **kwargs):
-    """Run the evolution script with given parameters."""
+    """
+    Run the evolution script with given parameters.
+
+    Args:
+        generations (list[list[int]]): generation permutation list
+        tsp_file (str): string name of TSP instance
+        **kwargs (): additional arguments from command line
+    """
     cmd = [sys.executable, "evolution.py", str(generations), tsp_file]
     
     for key, value in kwargs.items():

@@ -10,6 +10,14 @@ from evolution import EvolutionaryAlgorithm
 
 # Each parallel process runs
 def wrapper(args):
+    """
+    runs the evolition algorithm on a set of arguments
+    Args:
+        args (): argments for the function
+    Returns
+        mean (float): The mean of the results
+        std (float): The standard deviation of the results
+    """
     shm_name, shape, dtype, runs, population, generations, dimension, path = args
     
     tsp = TSP(path, "dummy_save.csv", dimension, False)
@@ -28,6 +36,9 @@ def wrapper(args):
     return results
 
 def main():
+    """
+    The main function which runs the EA algorithm for a set TSP instance
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('tsp_instance')
     parser.add_argument('population')

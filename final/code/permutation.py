@@ -1,34 +1,37 @@
 import random
 import numpy as np
 
-from load_tsp import loadTSP
+from load_tsp import LoadTSP
 
 class Permutation:
+    """
+    An base class that contains the basic mutation operators for a permutation
+    """
     graph = [[]]
     dimension: int
 
     def __init__(self, testPath, sharedMemory: bool):
-        """Init class
-
-        takes path to test case as input
-        edits private variable 'graph'
-        graph is 2d array, where graph[i][j] = distance between i and j
+        """
+        Generates the graph of distancesses between each pair of nodes for the TSP instance
+        Args:
+            test_path (string): the relative file location of the TSP isntance
         """
         
         if not sharedMemory:
-            tsp = loadTSP(testPath)
+            tsp = LoadTSP(testPath)
             self.graph = tsp.get_distance_matrix()
             self.dimension = tsp.get_dimension()
         
         return
     
-    # def random_pairs(self, n):
-    #     # Generate all unique index pairs (i, j) where i < j
-    #     pairs = [(i, j) for i in range(n - 1) for j in range(i + 1, n)]
-    #     random.shuffle(pairs)  # Randomize the order of swaps
-    #     return pairs
-    
     def permutationCost(self, perm):
+        """
+        Calculates the cost of a permutation through the TSP
+        Args:
+            perm (list[int]): the permutation through the TSP 
+        Returns:
+            cost (int): the calcualted cost of the permutation through the TSP
+        """
         n = len(perm)
         cost = 0
         for i in range(n):

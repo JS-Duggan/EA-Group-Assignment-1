@@ -23,9 +23,10 @@ class Crossover:
         return
 
     def order_crossover(self, parent_1, parent_2):
-        """Order Crossover (OX).
+        """
+        Order Crossover (OX).
 
-        Inputs:
+        Args:
             parent_1, parent_2 (list): equal-length permutations.
         Returns:
             (child_1, child_2): offspring preserving relative order of
@@ -73,9 +74,10 @@ class Crossover:
         return child_1, child_2
 
     def partially_mapped_crossover(self, parent_1, parent_2):
-        """Partially Mapped Crossover (PMX).
+        """
+        Partially Mapped Crossover (PMX).
 
-        Inputs:
+        Args:
             parent_1, parent_2 (list): equal-length permutations.
         Returns:
             (child_1, child_2): offspring where a central segment is mapped
@@ -144,9 +146,10 @@ class Crossover:
         return child_1, child_2
 
     def cycle_crossover(self, parent_1, parent_2):
-        """Cycle Crossover (CX).
+        """
+        Cycle Crossover (CX).
 
-        Inputs:
+        Args:
             parent_1, parent_2 (list): equal-length permutations.
         Returns:
             (child_1, child_2): offspring built by alternating cycles that
@@ -197,12 +200,12 @@ class Crossover:
         return child_1, child_2
 
     def edge_recombination_crossover(self, parent_1, parent_2):
-        """Edge Recombination Crossover (ERX).
-        
+        """
+        Edge Recombination Crossover (ERX).
         Preserves adjacency information from both parents by building
         an edge table and constructing offspring using shared edges.
         
-        Inputs:
+        Args:
             parent_1, parent_2 (list): equal-length permutations.
         Returns:
             (child_1, child_2): offspring that preserve edge information

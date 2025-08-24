@@ -10,6 +10,10 @@ class Selection:
         """
         Expected copies of i: μ * f(i) / Σf
         Spin a 1-armed wheel n times
+
+        InpArgsuts:
+            population (list[int]): Size of the generated popultation
+            fitness (list[int]): list of fitnesses in the popultaion
         """
         size = len(population)
         total_fitness = sum(fitnesses)
@@ -31,6 +35,12 @@ class Selection:
         """
         Pick k members at random
         Select best with probability p, else random contestant
+
+        Args:
+            population (list[int]): Size of the generated popultation
+            fitness (list[int]): list of fitnesses in the popultaion
+            k (int): number of samples per tournament
+            p (float): probability of the best winning
         """
         size = len(population)
         selected = []
@@ -56,6 +66,11 @@ class Selection:
     def elitism(self, population, fitnesses, num_elites=1):
         """
         Copy the top individuals directly into the next generation
+
+        Inputs:
+            population (list[int]): Size of the generated popultation
+            fitness (list[int]): list of fitnesses in the popultaion
+            num_elites (int): number of elite individuals in the popultation
         """
         size = len(population)
         # pair (fitness, individual) and sort descending
